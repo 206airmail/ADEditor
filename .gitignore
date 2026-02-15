@@ -1,0 +1,28 @@
+# Python cache folder
+__pycache__
+
+# Python virtual env folder
+venv
+
+# IDE
+.vscode/
+.idea/
+
+# Project specific folders (Excluded from Git)
+Examples/
+build/
+
+# Temporary files or logs
+*.log
+*.tmp
+
+# Ms Windows link files
+*.lnk
+*.url
+
+# xml files (settings, etc.)
+*.xml
+
+# Compressed archives
+*.7z
+*.zip
