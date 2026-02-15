@@ -1,0 +1,659 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-15 21:53+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: G:\Dev\_Python\ADEditor\Core\datas_manager.py:67
+msgid "New Project"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Core\farmsim_helper.py:100
+msgid "Reading savegame data from:"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Core\farmsim_helper.py:105
+msgid "Error: careerSavegame.xml not found"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Core\farmsim_helper.py:115
+msgid "Error: <mapId> tag not found in XML"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Core\farmsim_helper.py:121
+msgid "Found Map ID:"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Core\farmsim_helper.py:122
+msgid "Map Title:"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Core\farmsim_helper.py:132
+msgid "Error: Map not found in game data or mods folder:"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Core\farmsim_helper.py:135
+msgid "Map found at:"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Core\farmsim_helper.py:138
+msgid "Extracting map images (this may take a while)..."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Core\farmsim_helper.py:209
+#: G:\Dev\_Python\ADEditor\Core\farmsim_helper.py:233
+msgid "Found overview:"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Core\farmsim_helper.py:222
+#: G:\Dev\_Python\ADEditor\Core\farmsim_helper.py:246
+msgid "Found heightmap:"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Core\farmsim_helper.py:281
+msgid "Overview cropped and resized to 2048x2048"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Core\version.py:21
+msgid "Copyright (c) X.P."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Core\version.py:27
+msgid "AutoDriveEditor"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Core\version.py:30
+msgid "FS25 AutoDrive Datas Editor"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_about.py:25
+msgid "Made with"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_about.py:25
+msgid "Based on"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_about.py:25
+msgid "and"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_marker.py:22
+msgid "Name:"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_marker.py:28
+msgid "Group:"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:36
+msgid "Reference FS25 Savegame:"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:45
+msgid "Related FS25 map file:"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:54
+msgid "AutoDrive datas file:"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:67
+msgid "Savegame read results:"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:93
+msgid "Select FS25 Savegame folder"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:102
+#, python-format
+msgid "Valid FS25 savegame folder selected: %s\n"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:105
+msgid "Analyzing savegame data...\n"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:115
+msgid ""
+"Analyzing savegame and converting map images...\n"
+"Please wait, this may take a few moments."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:125
+msgid "Map analysis completed successfully!\n"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:151
+#, python-format
+msgid "Found AutoDrive configuration file: %s\n"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:154
+msgid "No AutoDrive configuration found (clean start).\n"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:158
+msgid "Failed to locate relevant map file.\n"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:159
+msgid ""
+"Could not locate the map file associated with this savegame.\n"
+"Please check the mods folder or game installation."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:160
+msgid "Map Not Found"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:162
+msgid ""
+"The selected folder is not a valid FS25 savegame folder.\n"
+"Missing 'careerSavegame.xml'."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:163
+msgid "Invalid Savegame Folder"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:168
+msgid "Please select a valid savegame and ensure the map is loaded."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:169
+msgid "Incomplete Data"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:183
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:284
+msgid "Save AutoDrive Editor Project"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:208
+msgid "Project created and saved successfully!"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:208
+msgid "Success"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:211
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:298
+msgid "Failed to save project file."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_settings.py:24
+msgid "Position of the main window:"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_settings.py:26
+msgid "Position of the main window at application startup:"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_settings.py:30
+msgid "Predefined position"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_settings.py:32
+msgid "Last registered position"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_settings.py:36
+msgid "Predefined positions:"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_settings.py:41
+msgid "Top-Left"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_settings.py:41
+msgid "Top-Center"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_settings.py:41
+msgid "Top-Right"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_settings.py:41
+msgid "Middle-Left"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_settings.py:41
+msgid "Center-Screen"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_settings.py:41
+msgid "Middle-Right"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_settings.py:41
+msgid "Bottom-Left"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_settings.py:41
+msgid "Bottom-Center"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_settings.py:41
+msgid "Bottom-Right"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_settings.py:55
+msgid "Misc:"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_settings.py:57
+msgid "Allow only one instance of the application"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_settings.py:59
+msgid "Keep the interface language in English (restart needed)"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:112
+msgid "Export to FS Savegame"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:112
+msgid "Export Autodrive datas to a Farming Simulator savegame"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:113
+msgid "Restore to FS Savegame"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:113
+msgid "Restore original datas to the Farming Simulator savegame"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:125
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:159
+msgid "Delete selected item(s)"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:144
+msgid "Create a new project"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:145
+msgid "Open an existing project"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:146
+msgid "Save the current project"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:147
+msgid "Save the current project with a new name"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:155
+msgid "Reset Zoom"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:156
+msgid "Window zoom"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:156
+msgid "Zoom to Rectangle"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:160
+msgid "Direction"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:160
+msgid "Swap Route Direction"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:161
+msgid "Connect"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:161
+msgid "Connect 2 waypoints"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:162
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:710
+msgid "Add Marker"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:162
+msgid "Create Map Marker"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:163
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:738
+msgid "Edit Marker"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:163
+msgid "Edit selected Map Marker"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:164
+msgid "Del Marker"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:164
+msgid "Delete Map Marker"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:166
+msgid "Open settings dialog"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:242
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:283
+msgid "AutoDrive Project (*.adproject)|*.adproject|All Files (*.*)|*.*"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:243
+msgid "Open AutoDrive Editor Project"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:258
+msgid "File not found:"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:271
+msgid "Failed to load project file."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:304
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:405
+msgid "No project loaded."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:304
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:325
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:333
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:342
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:349
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:369
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:391
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:396
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:400
+msgid "Export"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:313
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:422
+msgid "Select Farming Simulator savegame folder"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:324
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:433
+msgid ""
+"The selected folder is not a valid Farming Simulator savegame.\n"
+"Missing 'careerSavegame.xml'."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:332
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:441
+msgid "Failed to read map information from selected savegame."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:341
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:450
+msgid ""
+"Failed to read map information from the project's original savegame.\n"
+"Cannot verify map compatibility."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:348
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:457
+#, python-brace-format
+msgid ""
+"Map mismatch:\n"
+"Project map: {0}\n"
+"Selected savegame map: {1}"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:366
+#, python-brace-format
+msgid ""
+"\n"
+"- ... and {0} more issue(s)"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:368
+#, python-brace-format
+msgid ""
+"Export blocked: invalid network data detected.\n"
+"\n"
+"{0}"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:391
+msgid "Failed to export AutoDrive data."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:395
+#, python-brace-format
+msgid ""
+"AutoDrive data exported successfully.\n"
+"\n"
+"{0}"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:399
+#, python-brace-format
+msgid ""
+"Export failed:\n"
+"{0}"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:405
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:412
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:434
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:442
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:451
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:458
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:485
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:489
+msgid "Restore"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:411
+msgid "Original AutoDrive data not found in project or source path."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:465
+msgid ""
+"Restore original AutoDrive data into this savegame?\n"
+"This will overwrite current AutoDrive_config.xml."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:466
+msgid "Confirm Restore"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:482
+#, python-brace-format
+msgid ""
+"Original AutoDrive data restored successfully:\n"
+"{0}"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:484
+#, python-brace-format
+msgid ""
+"\n"
+"Backup created:\n"
+"{0}"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:488
+#, python-brace-format
+msgid ""
+"Restore failed:\n"
+"{0}"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:495
+msgid "No network loaded."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:499
+#, python-brace-format
+msgid "Waypoint key/id mismatch for waypoint {0}."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:504
+#, python-brace-format
+msgid "Waypoint {0}: outgoing reference to missing waypoint {1}."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:507
+#, python-brace-format
+msgid "Waypoint {0}->{1}: missing reciprocal incoming reference."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:512
+#, python-brace-format
+msgid "Waypoint {0}: incoming reference from missing waypoint {1}."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:515
+#, python-brace-format
+msgid "Waypoint {0}<-{1}: missing reciprocal outgoing reference."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:519
+#, python-brace-format
+msgid "Marker '{0}' points to missing waypoint {1}."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:529
+#, python-brace-format
+msgid "File: {0}"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:530
+#, python-brace-format
+msgid "Totals - Waypoints: {0}, Routes: {1}, Markers: {2}"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:536
+#, python-brace-format
+msgid "Changes - Waypoints: +{0} / -{1} / ~{2}"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:541
+#, python-brace-format
+msgid "Changes - Routes: +{0} / -{1}"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:546
+#, python-brace-format
+msgid "Changes - Markers: +{0} / -{1} / ~{2}"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:551
+msgid "Changes - baseline unavailable (new file or source read failed)."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:554
+msgid ""
+"Note: waypoint IDs were renumbered to a dense 1..N range for FS "
+"compatibility."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:557
+#, python-brace-format
+msgid "Backup: {0}"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:690
+#, python-brace-format
+msgid "Created route: {0} -> {1}"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:692
+msgid "Could not create route. Connection might already exist."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:755
+msgid "Are you sure you want to delete this marker?"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:756
+msgid "Confirm Delete"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:786
+msgid "No items selected."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:793
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:821
+#, python-brace-format
+msgid "{0} waypoint(s)"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:795
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:823
+#, python-brace-format
+msgid "{0} route(s)"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:796
+#, python-brace-format
+msgid "Delete {0}?"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:798
+msgid "Confirm Deletion"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:824
+#, python-brace-format
+msgid "Successfully deleted {0}."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:827
+msgid "Failed to delete selected items."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:836
+msgid "No routes selected."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:837
+msgid "Swap Direction"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:855
+#, python-brace-format
+msgid "Swapped direction for {0} route(s)."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:857
+msgid "Failed to swap route direction."
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:875
+msgid "Click and drag to define zoom area"
+msgstr ""
+
+#: G:\Dev\_Python\ADEditor\Gui\map_canvas.py:501
+msgid "No map loaded"
+msgstr ""

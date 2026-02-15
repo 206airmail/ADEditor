@@ -1,0 +1,10 @@
+# AutoDrive Editor - Dependencies
+
+# Core dependencies
+wxPython>=4.2.4
+numpy>=1.21.0
+
+# Optional dependencies for packaging
+# Can be done with "python ADEditor.py --build" in development mode
+
+#cx_Freeze>=6.15.0
