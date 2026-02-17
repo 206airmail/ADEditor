@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ADEditor software\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-15 21:53+0100\n"
-"PO-Revision-Date: 2026-02-15 21:53+0100\n"
+"POT-Creation-Date: 2026-02-17 23:33+0100\n"
+"PO-Revision-Date: 2026-02-17 23:37+0100\n"
 "Last-Translator: Xaviou <x.psoud@gmail.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -196,7 +196,7 @@ msgid "Incomplete Data"
 msgstr "Données incomplètes"
 
 #: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:183
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:284
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:282
 msgid "Save AutoDrive Editor Project"
 msgstr "Sauvegarder le projet AutoDrive Editor"
 
@@ -209,7 +209,7 @@ msgid "Success"
 msgstr "Succès"
 
 #: G:\Dev\_Python\ADEditor\Dialogs\dialog_new.py:211
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:298
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:296
 msgid "Failed to save project file."
 msgstr "Échec de l'enregistrement du fichier de projet."
 
@@ -281,142 +281,142 @@ msgstr "N'autoriser qu'une seule instance de l'application"
 msgid "Keep the interface language in English (restart needed)"
 msgstr "Conserver l'interface en anglais (redémarrage nécessaire)"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:112
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:110
 msgid "Export to FS Savegame"
 msgstr "Exporter vers sauvegarde FS"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:112
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:110
 msgid "Export Autodrive datas to a Farming Simulator savegame"
 msgstr "Exporter les données Autodrive vers une sauvegarde Farming Simulator"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:113
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:111
 msgid "Restore to FS Savegame"
 msgstr "Restaurer vers Sauvegarde FS"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:113
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:111
 msgid "Restore original datas to the Farming Simulator savegame"
 msgstr "Restaurer les données d'origine dans la sauvegarde Farming Simulator"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:125
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:159
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:123
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:157
 msgid "Delete selected item(s)"
 msgstr "Supprimer les éléments sélectionnés"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:144
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:142
 msgid "Create a new project"
 msgstr "Créer un nouveau projet"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:145
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:143
 msgid "Open an existing project"
 msgstr "Ouvrir un projet existant"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:146
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:144
 msgid "Save the current project"
 msgstr "Enregistrer le projet en cours"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:147
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:145
 msgid "Save the current project with a new name"
 msgstr "Sauvegarder le projet actuel sous un nouveau nom"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:155
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:153
 msgid "Reset Zoom"
 msgstr "Réinitialiser le zoom"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:156
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:154
 msgid "Window zoom"
 msgstr "Zoom fenêtre"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:156
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:154
 msgid "Zoom to Rectangle"
 msgstr "Zoomer avec un rectangle"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:160
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:158
 msgid "Direction"
 msgstr "Direction"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:160
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:158
 msgid "Swap Route Direction"
 msgstr "Changer la direction de l'itinéraire"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:161
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:159
 msgid "Connect"
 msgstr "Relier"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:161
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:159
 msgid "Connect 2 waypoints"
 msgstr "Relier 2 points de passage"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:162
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:710
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:160
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:708
 msgid "Add Marker"
 msgstr "Ajouter un marqueur"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:162
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:160
 msgid "Create Map Marker"
 msgstr "Créer un marqueur sur la carte"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:163
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:738
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:161
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:736
 msgid "Edit Marker"
 msgstr "Éditer le marqueur"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:163
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:161
 msgid "Edit selected Map Marker"
 msgstr "Éditer le marqueur de carte"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:164
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:162
 msgid "Del Marker"
 msgstr "Supprimer le marqueur"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:164
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:162
 msgid "Delete Map Marker"
 msgstr "Supprimer le marqueur de carte"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:166
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:164
 msgid "Open settings dialog"
 msgstr "Ouvrir la boîte de dialogue des paramètres"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:242
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:283
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:240
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:281
 msgid "AutoDrive Project (*.adproject)|*.adproject|All Files (*.*)|*.*"
 msgstr "Projet AutoDrive (*.adproject)|*.adproject|Tous les fichiers (*.*)|*.*"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:243
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:241
 msgid "Open AutoDrive Editor Project"
 msgstr "Ouvrir le projet AutoDrive Editor"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:258
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:256
 msgid "File not found:"
 msgstr "Fichier non trouvé :"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:271
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:269
 msgid "Failed to load project file."
 msgstr "Échec du chargement du fichier de projet."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:304
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:405
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:302
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:403
 msgid "No project loaded."
 msgstr "Pas de projet chargé."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:304
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:325
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:333
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:342
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:349
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:369
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:391
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:396
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:400
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:302
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:323
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:331
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:340
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:347
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:367
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:389
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:394
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:398
 msgid "Export"
 msgstr "Export"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:313
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:422
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:311
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:420
 msgid "Select Farming Simulator savegame folder"
 msgstr "Sélectionnez un dossier de sauvegarde Farming Simulator"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:324
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:433
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:322
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:431
 msgid ""
 "The selected folder is not a valid Farming Simulator savegame.\n"
 "Missing 'careerSavegame.xml'."
@@ -425,15 +425,15 @@ msgstr ""
 "Simulator.\n"
 "Fichier « careerSavegame.xml » manquant."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:332
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:441
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:330
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:439
 msgid "Failed to read map information from selected savegame."
 msgstr ""
 "Échec de la lecture des informations de carte depuis la sauvegarde "
 "sélectionnée."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:341
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:450
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:339
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:448
 msgid ""
 "Failed to read map information from the project's original savegame.\n"
 "Cannot verify map compatibility."
@@ -441,8 +441,8 @@ msgstr ""
 "Échec de lecture d'information sur la carte depuis la sauvegarde originale.\n"
 "Impossible de vérifier la compatibilité de la carte."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:348
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:457
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:346
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:455
 #, python-brace-format
 msgid ""
 "Map mismatch:\n"
@@ -453,7 +453,7 @@ msgstr ""
 "Carte du projet : {0}\n"
 "Carte de sauvegarde sélectionnée : {1}"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:366
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:364
 #, python-brace-format
 msgid ""
 "\n"
@@ -462,7 +462,7 @@ msgstr ""
 "\n"
 "- ... et {0} autre(s) problème(s)"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:368
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:366
 #, python-brace-format
 msgid ""
 "Export blocked: invalid network data detected.\n"
@@ -473,11 +473,11 @@ msgstr ""
 "\n"
 "{0}"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:391
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:389
 msgid "Failed to export AutoDrive data."
 msgstr "Échec d'exportation des données AutoDrive."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:395
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:393
 #, python-brace-format
 msgid ""
 "AutoDrive data exported successfully.\n"
@@ -488,7 +488,7 @@ msgstr ""
 "\n"
 "{0}"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:399
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:397
 #, python-brace-format
 msgid ""
 "Export failed:\n"
@@ -497,23 +497,23 @@ msgstr ""
 "Échec de l'export :\n"
 "{0}"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:405
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:412
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:434
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:442
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:451
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:458
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:485
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:489
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:403
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:410
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:432
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:440
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:449
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:456
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:483
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:487
 msgid "Restore"
 msgstr "Restaurer"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:411
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:409
 msgid "Original AutoDrive data not found in project or source path."
 msgstr ""
 "Données AutoDrive originales introuvables dans le projet ou le chemin source."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:465
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:463
 msgid ""
 "Restore original AutoDrive data into this savegame?\n"
 "This will overwrite current AutoDrive_config.xml."
@@ -521,11 +521,11 @@ msgstr ""
 "Restaurer les données AutoDrive d'origine dans cette sauvegarde ?\n"
 "Cela écrasera le AutoDrive_config.xml actuel."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:466
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:464
 msgid "Confirm Restore"
 msgstr "Confirmez la restauration"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:482
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:480
 #, python-brace-format
 msgid ""
 "Original AutoDrive data restored successfully:\n"
@@ -534,7 +534,7 @@ msgstr ""
 "Données AutoDrive d'origine restaurées avec succès :\n"
 "{0}"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:484
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:482
 #, python-brace-format
 msgid ""
 "\n"
@@ -545,7 +545,7 @@ msgstr ""
 "Sauvegarde créée :\n"
 "{0}"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:488
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:486
 #, python-brace-format
 msgid ""
 "Restore failed:\n"
@@ -554,74 +554,74 @@ msgstr ""
 "Échec de la restauration :\n"
 "{0}"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:495
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:493
 msgid "No network loaded."
 msgstr "Aucun réseau chargé."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:499
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:497
 #, python-brace-format
 msgid "Waypoint key/id mismatch for waypoint {0}."
 msgstr "Non-correspondance clé/id pour le point de passage {0}."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:504
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:502
 #, python-brace-format
 msgid "Waypoint {0}: outgoing reference to missing waypoint {1}."
 msgstr ""
 "Point de passage {0} : référence sortante vers point de passage manquant {1}."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:507
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:505
 #, python-brace-format
 msgid "Waypoint {0}->{1}: missing reciprocal incoming reference."
 msgstr "Point de passage {0}->{1} : référence entrante réciproque manquante."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:512
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:510
 #, python-brace-format
 msgid "Waypoint {0}: incoming reference from missing waypoint {1}."
 msgstr ""
 "Point de passage {0} : référence entrante vers point de passage manquant {1}."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:515
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:513
 #, python-brace-format
 msgid "Waypoint {0}<-{1}: missing reciprocal outgoing reference."
 msgstr "Point de passage {0}<-{1} : référence sortante réciproque manquante."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:519
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:517
 #, python-brace-format
 msgid "Marker '{0}' points to missing waypoint {1}."
 msgstr "Le marqueur « {0} »renvoie vers un point de passage manquant {1}."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:529
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:527
 #, python-brace-format
 msgid "File: {0}"
 msgstr "Fichier : {0}"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:530
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:528
 #, python-brace-format
 msgid "Totals - Waypoints: {0}, Routes: {1}, Markers: {2}"
 msgstr "Totaux - Points de passage : {0}, Itinéraires : {1}, Marqueurs : {2}"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:536
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:534
 #, python-brace-format
 msgid "Changes - Waypoints: +{0} / -{1} / ~{2}"
 msgstr "Changements - Points de passage : +{0} / -{1} / ~{2}"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:541
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:539
 #, python-brace-format
 msgid "Changes - Routes: +{0} / -{1}"
 msgstr "Changements - Itinéraires : +{0} / -{1}"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:546
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:544
 #, python-brace-format
 msgid "Changes - Markers: +{0} / -{1} / ~{2}"
 msgstr "Modifications - Marqueurs : +{0} / -{1} / ~{2}"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:551
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:549
 msgid "Changes - baseline unavailable (new file or source read failed)."
 msgstr ""
 "Modifications - ligne de base indisponible (nouveau fichier ou lecture de la "
 "source échouée)."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:554
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:552
 msgid ""
 "Note: waypoint IDs were renumbered to a dense 1..N range for FS "
 "compatibility."
@@ -629,83 +629,146 @@ msgstr ""
 "Note : les IDs des points de passage ont été renumérotés dans une plage "
 "dense 1..N pour assurer la compatibilité avec FS."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:557
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:555
 #, python-brace-format
 msgid "Backup: {0}"
 msgstr "Sauvegarde : {0}"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:690
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:688
 #, python-brace-format
 msgid "Created route: {0} -> {1}"
 msgstr "Itinéraire créé : {0} -> {1}"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:692
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:690
 msgid "Could not create route. Connection might already exist."
 msgstr "Impossible de créer l'itinéraire. La connexion existe peut-être déjà."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:755
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:753
 msgid "Are you sure you want to delete this marker?"
 msgstr "Êtes-vous sûr de vouloir supprimer ce marqueur ?"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:756
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:754
 msgid "Confirm Delete"
 msgstr "Confirmer la suppression"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:786
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:784
 msgid "No items selected."
 msgstr "Aucun élément sélectionné."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:793
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:821
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:803
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:822
+#, python-brace-format
+msgid ""
+"You are about to delete {0} route(s).\n"
+"\n"
+msgstr ""
+"Vous êtes sur le point de supprimer {0} itinéraire(s).\n"
+"\n"
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:804
+#, python-brace-format
+msgid "{0} intermediate waypoint(s) are part of these routes.\n"
+msgstr "{0} points de passage intermédiaires font partie de ces itinéraires.\n"
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:808
+#, python-brace-format
+msgid ""
+"{0} endpoint waypoint(s) will become orphaned and will be deleted.\n"
+"\n"
+msgstr ""
+"{0} points de passage finaux deviendront orphelins et seront automatiquement "
+"supprimés.\n"
+"\n"
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:810
+msgid "Do you want to delete the intermediate waypoints as well?"
+msgstr "Voulez-vous également supprimer les points de passage intermédiaires ?"
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:812
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:825
+msgid "Delete Routes"
+msgstr "Supprimer les itinéraires"
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:823
+#, python-brace-format
+msgid ""
+"{0} endpoint waypoint(s) will become orphaned and will be deleted "
+"automatically."
+msgstr ""
+"{0} points de passage finaux deviendront orphelins et seront automatiquement "
+"supprimés."
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:838
+#, python-brace-format
+msgid "{0} selected"
+msgstr "{0} sélectionné"
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:842
+#, python-brace-format
+msgid "{0} intermediate"
+msgstr "{0} intermédiaire"
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:846
+#, python-brace-format
+msgid "{0} orphan"
+msgstr "{0} orphelin"
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:849
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:890
 #, python-brace-format
 msgid "{0} waypoint(s)"
 msgstr "{0} point(s) de passage"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:795
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:823
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:853
+#, python-brace-format
+msgid "{0} waypoint(s) ({1})"
+msgstr "{0} point(s) de passage ({1})"
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:856
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:892
 #, python-brace-format
 msgid "{0} route(s)"
 msgstr "{0} itinéraire(s)"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:796
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:858
 #, python-brace-format
 msgid "Delete {0}?"
 msgstr "Supprimer {0} ?"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:798
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:860
 msgid "Confirm Deletion"
 msgstr "Confirmer la suppression"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:824
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:893
 #, python-brace-format
 msgid "Successfully deleted {0}."
 msgstr "Suppression réussie : {0}."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:827
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:896
 msgid "Failed to delete selected items."
 msgstr "Impossible de supprimer les éléments sélectionnés."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:836
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:905
 msgid "No routes selected."
 msgstr "Aucun itinéraire sélectionné."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:837
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:906
 msgid "Swap Direction"
 msgstr "Changer la direction"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:855
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:924
 #, python-brace-format
 msgid "Swapped direction for {0} route(s)."
 msgstr "Direction changée pour {0} itinéraire(s)."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:857
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:926
 msgid "Failed to swap route direction."
 msgstr "Échec du changement de direction de l'itinéraire."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:875
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:944
 msgid "Click and drag to define zoom area"
 msgstr "Cliquez et faites glisser pour définir la zone de zoom"
 
-#: G:\Dev\_Python\ADEditor\Gui\map_canvas.py:501
+#: G:\Dev\_Python\ADEditor\Gui\map_canvas.py:502
 msgid "No map loaded"
 msgstr "Aucune carte chargée"
