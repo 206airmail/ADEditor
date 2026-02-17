@@ -1295,9 +1295,49 @@ class MapCanvas(wx.Panel):
                 self._selected_waypoints.clear()
                 self._selected_routes.clear()
             
-            # Add all routes in the chain to selection
+            # Add all routes in the chain to selection (don't select waypoints for route double-click)
             self._selected_routes.update(route_chain)
+            
             self.Refresh()
+            event.Skip()
+            return
+        
+        # Check if double-clicked on a waypoint
+        waypoint_id = self._hit_test(currentPos)
+        
+        if waypoint_id is not None:
+            network = self._datasMngr.getRoadNetwork()
+            if network:
+                waypoint = network.get_waypoint(waypoint_id)
+                if waypoint:
+                    # Find all routes connected to this waypoint (incoming and outgoing)
+                    connected_routes = set()
+                    for outgoing_id in waypoint.outgoing:
+                        route = (waypoint_id, outgoing_id)
+                        connected_routes.add(route)
+                    for incoming_id in waypoint.incoming:
+                        route = (incoming_id, waypoint_id)
+                        connected_routes.add(route)
+                    
+                    # Find the route chain for all connected routes
+                    route_chain = set()
+                    for start_route in connected_routes:
+                        chain = self._find_route_chain(start_route)
+                        route_chain.update(chain)
+                    
+                    if not event.ControlDown():
+                        # Clear selections if Ctrl not pressed
+                        self._selected_waypoints.clear()
+                        self._selected_routes.clear()
+                    
+                    # Add all routes in the chain to selection
+                    self._selected_routes.update(route_chain)
+                    
+                    # Also select intermediate waypoints (exclude endpoints)
+                    intermediate_waypoints = self._get_intermediate_waypoints_from_routes(route_chain)
+                    self._selected_waypoints.update(intermediate_waypoints)
+                    
+                    self.Refresh()
         
         event.Skip()
 
@@ -1443,6 +1483,58 @@ class MapCanvas(wx.Panel):
         
         return chain
 
+    def _get_intermediate_waypoints_from_routes(self, routes):
+        """Extract waypoint IDs from selected routes, excluding the endpoints.
+        
+        Endpoints are defined as:
+        - The 'from_id' of routes with no incoming routes from the selection
+        - The 'to_id' of routes with no outgoing routes from the selection
+        
+        Args:
+            routes: Set of route tuples (from_id, to_id)
+            
+        Returns:
+            Set of waypoint IDs that are intermediate (not endpoints)
+        """
+        if not routes:
+            return set()
+        
+        network = self._datasMngr.getRoadNetwork()
+        if not network:
+            return set()
+        
+        # Build a map of all waypoints involved in the routes
+        all_waypoints = set()
+        outgoing_in_chain = {}  # wp_id -> set of out_ids in chain
+        incoming_in_chain = {}  # wp_id -> set of in_ids in chain
+        
+        for from_id, to_id in routes:
+            all_waypoints.add(from_id)
+            all_waypoints.add(to_id)
+            
+            if from_id not in outgoing_in_chain:
+                outgoing_in_chain[from_id] = set()
+            outgoing_in_chain[from_id].add(to_id)
+            
+            if to_id not in incoming_in_chain:
+                incoming_in_chain[to_id] = set()
+            incoming_in_chain[to_id].add(from_id)
+        
+        # Find endpoints: waypoints that are only incoming or only outgoing in the chain
+        endpoints = set()
+        
+        for wp_id in all_waypoints:
+            has_incoming = wp_id in incoming_in_chain and len(incoming_in_chain[wp_id]) > 0
+            has_outgoing = wp_id in outgoing_in_chain and len(outgoing_in_chain[wp_id]) > 0
+            
+            # If a waypoint has no incoming (start of chain) or no outgoing (end of chain),
+            # and it's not a junction (single route in and single route out)
+            if not has_incoming or not has_outgoing:
+                endpoints.add(wp_id)
+        
+        # Return all waypoints except endpoints
+        intermediate = all_waypoints - endpoints
+        return intermediate
 
     def _draw_selection_rect(self, dc):
         """Draw the selection rectangle if dragging."""
