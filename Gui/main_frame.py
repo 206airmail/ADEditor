@@ -785,12 +785,76 @@ class MainFrame(wx.Frame):
                          _("Delete"), wx.OK | wx.ICON_INFORMATION)
             return
         
+        # Check if only routes are selected (no waypoints)
+        intermediate_wp_to_delete = None
+        orphan_wp_to_delete = None
+        
+        if selected_rt and not selected_wp:
+            # Always find orphan endpoints that would have no connections left
+            orphan_wp = self.mapCanvas._get_orphan_endpoints_from_routes(selected_rt)
+            if orphan_wp:
+                orphan_wp_to_delete = orphan_wp
+            
+            # Get intermediate waypoints from selected routes
+            intermediate_wp = self.mapCanvas._get_intermediate_waypoints_from_routes(selected_rt)
+            
+            if intermediate_wp:
+                # Ask user if they want to also delete intermediate waypoints
+                msg = _("You are about to delete {0} route(s).\n\n").format(len(selected_rt))
+                msg += _("{0} intermediate waypoint(s) are part of these routes.\n").format(len(intermediate_wp))
+                
+                # Add info about orphan endpoints if any
+                if orphan_wp_to_delete:
+                    msg += _("{0} endpoint waypoint(s) will become orphaned and will be deleted.\n\n").format(len(orphan_wp_to_delete))
+                
+                msg += _("Do you want to delete the intermediate waypoints as well?")
+                
+                dlg = wx.MessageDialog(self, msg, _("Delete Routes"), 
+                                     wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION)
+                
+                result = dlg.ShowModal()
+                dlg.Destroy()
+                
+                if result == wx.ID_YES:
+                    intermediate_wp_to_delete = intermediate_wp
+            elif orphan_wp_to_delete:
+                # No intermediate waypoints, but there are orphans - inform user
+                msg = _("You are about to delete {0} route(s).\n\n").format(len(selected_rt))
+                msg += _("{0} endpoint waypoint(s) will become orphaned and will be deleted automatically.").format(len(orphan_wp_to_delete))
+                
+                dlg = wx.MessageDialog(self, msg, _("Delete Routes"), 
+                                     wx.OK | wx.ICON_INFORMATION)
+                dlg.ShowModal()
+                dlg.Destroy()
+        
         # Build confirmation message
         parts = []
+        
+        # Count waypoints to delete (selected + intermediate + orphan endpoints)
+        total_wp = len(selected_wp)
+        wp_details = []
+        
         if selected_wp:
-            parts.append(_("{0} waypoint(s)").format(len(selected_wp)))
+            wp_details.append(_("{0} selected").format(len(selected_wp)))
+        
+        if intermediate_wp_to_delete:
+            total_wp += len(intermediate_wp_to_delete)
+            wp_details.append(_("{0} intermediate").format(len(intermediate_wp_to_delete)))
+        
+        if orphan_wp_to_delete:
+            total_wp += len(orphan_wp_to_delete)
+            wp_details.append(_("{0} orphan").format(len(orphan_wp_to_delete)))
+        
+        if total_wp > 0:
+            parts.append(_("{0} waypoint(s)").format(total_wp))
+            if len(wp_details) > 1:
+                # Add details if we have multiple types
+                details_msg = ", ".join(wp_details)
+                parts[-1] = _("{0} waypoint(s) ({1})").format(total_wp, details_msg)
+        
         if selected_rt:
             parts.append(_("{0} route(s)").format(len(selected_rt)))
+        
         msg = _("Delete {0}?").format(", ".join(parts))
         
         dlg = wx.MessageDialog(self, msg, _("Confirm Deletion"), 
@@ -804,8 +868,15 @@ class MainFrame(wx.Frame):
             if selected_rt:
                 removed_rt = self._dataMngr.remove_routes(list(selected_rt))
             
-            if selected_wp:
-                removed_wp = self._dataMngr.remove_waypoints(list(selected_wp))
+            # Combine all waypoints to delete: selected + intermediate + orphans
+            wp_to_delete = list(selected_wp)
+            if intermediate_wp_to_delete is not None:
+                wp_to_delete.extend(intermediate_wp_to_delete)
+            if orphan_wp_to_delete is not None:
+                wp_to_delete.extend(orphan_wp_to_delete)
+            
+            if wp_to_delete:
+                removed_wp = self._dataMngr.remove_waypoints(wp_to_delete)
             
             if removed_wp > 0 or removed_rt > 0:
                 # Clear selection and refresh

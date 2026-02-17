@@ -1283,26 +1283,7 @@ class MapCanvas(wx.Panel):
         """Handle left double-click to select entire route chain."""
         currentPos = event.GetPosition()
         
-        # Check if double-clicked on a route
-        route = self._hit_test_route(currentPos)
-        
-        if route is not None:
-            # Find the entire chain of connected routes
-            route_chain = self._find_route_chain(route)
-            
-            if not event.ControlDown():
-                # Clear selections if Ctrl not pressed
-                self._selected_waypoints.clear()
-                self._selected_routes.clear()
-            
-            # Add all routes in the chain to selection (don't select waypoints for route double-click)
-            self._selected_routes.update(route_chain)
-            
-            self.Refresh()
-            event.Skip()
-            return
-        
-        # Check if double-clicked on a waypoint
+        # Check if double-clicked on a waypoint first (higher priority)
         waypoint_id = self._hit_test(currentPos)
         
         if waypoint_id is not None:
@@ -1338,6 +1319,26 @@ class MapCanvas(wx.Panel):
                     self._selected_waypoints.update(intermediate_waypoints)
                     
                     self.Refresh()
+            
+            event.Skip()
+            return
+        
+        # Check if double-clicked on a route
+        route = self._hit_test_route(currentPos)
+        
+        if route is not None:
+            # Find the entire chain of connected routes
+            route_chain = self._find_route_chain(route)
+            
+            if not event.ControlDown():
+                # Clear selections if Ctrl not pressed
+                self._selected_waypoints.clear()
+                self._selected_routes.clear()
+            
+            # Add all routes in the chain to selection (don't select waypoints for route double-click)
+            self._selected_routes.update(route_chain)
+            
+            self.Refresh()
         
         event.Skip()
 
@@ -1535,6 +1536,79 @@ class MapCanvas(wx.Panel):
         # Return all waypoints except endpoints
         intermediate = all_waypoints - endpoints
         return intermediate
+
+    def _get_orphan_endpoints_from_routes(self, routes):
+        """Find endpoint waypoints that become orphaned after deleting the given routes.
+        
+        A waypoint becomes orphan if:
+        - It's an endpoint of the selected routes (has no incoming or no outgoing within the chain)
+        - After deleting the selected routes, it would have no other connections (incoming or outgoing)
+        
+        Args:
+            routes: Set of route tuples (from_id, to_id) to be deleted
+            
+        Returns:
+            Set of waypoint IDs that would become orphaned
+        """
+        if not routes:
+            return set()
+        
+        network = self._datasMngr.getRoadNetwork()
+        if not network:
+            return set()
+        
+        # Get the endpoints first
+        endpoints = set()
+        all_waypoints_in_routes = set()
+        outgoing_in_selection = {}  # wp_id -> set of out_ids in selection
+        incoming_in_selection = {}  # wp_id -> set of in_ids in selection
+        
+        for from_id, to_id in routes:
+            all_waypoints_in_routes.add(from_id)
+            all_waypoints_in_routes.add(to_id)
+            
+            if from_id not in outgoing_in_selection:
+                outgoing_in_selection[from_id] = set()
+            outgoing_in_selection[from_id].add(to_id)
+            
+            if to_id not in incoming_in_selection:
+                incoming_in_selection[to_id] = set()
+            incoming_in_selection[to_id].add(from_id)
+        
+        # Find endpoints
+        for wp_id in all_waypoints_in_routes:
+            has_incoming = wp_id in incoming_in_selection and len(incoming_in_selection[wp_id]) > 0
+            has_outgoing = wp_id in outgoing_in_selection and len(outgoing_in_selection[wp_id]) > 0
+            
+            if not has_incoming or not has_outgoing:
+                endpoints.add(wp_id)
+        
+        # Now check which endpoints would become orphaned
+        orphans = set()
+        for wp_id in endpoints:
+            wp = network.get_waypoint(wp_id)
+            if not wp:
+                continue
+            
+            # Count remaining connections after deletion of selected routes
+            remaining_incoming = 0
+            remaining_outgoing = 0
+            
+            # Check incoming connections that are NOT in the to-be-deleted routes
+            for incoming_id in wp.incoming:
+                if (incoming_id, wp_id) not in routes:
+                    remaining_incoming += 1
+            
+            # Check outgoing connections that are NOT in the to-be-deleted routes
+            for outgoing_id in wp.outgoing:
+                if (wp_id, outgoing_id) not in routes:
+                    remaining_outgoing += 1
+            
+            # If no remaining connections, this waypoint becomes orphaned
+            if remaining_incoming == 0 and remaining_outgoing == 0:
+                orphans.add(wp_id)
+        
+        return orphans
 
     def _draw_selection_rect(self, dc):
         """Draw the selection rectangle if dragging."""
