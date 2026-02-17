@@ -11,7 +11,7 @@ class MapCanvas(wx.Panel):
     
     # Zoom constraints
     ZOOM_MIN = 0.1
-    ZOOM_MAX = 20.0
+    ZOOM_MAX = 30.0
     ZOOM_STEP = 1.1  # Multiplicative factor for zoom
     PAN_MARGIN = 100  # Pixels of empty space allowed when panning
     
