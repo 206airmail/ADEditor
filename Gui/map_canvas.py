@@ -35,6 +35,7 @@ class MapCanvas(wx.Panel):
         self._lastMousePos = None
         self._isRightDragging = False
         self._isLeftDragging = False
+        self._isShiftLeftDragging = False  # For Shift+drag to select routes
         self._dragStartPos = None
         self._currentDragPos = None
         self._selected_waypoints = set()
@@ -353,7 +354,7 @@ class MapCanvas(wx.Panel):
             event.Skip()
             return
             
-        if self._isLeftDragging and self._dragStartPos:
+        if (self._isLeftDragging or self._isShiftLeftDragging) and self._dragStartPos:
             self._currentDragPos = currentPos
             self.Refresh()
         
@@ -1076,7 +1077,13 @@ class MapCanvas(wx.Panel):
         self._lastMousePos = currentPos
         self._dragStartPos = currentPos
         self._currentDragPos = currentPos
-        self._isLeftDragging = True
+        
+        # Check if Shift is pressed for Shift+drag route selection
+        if event.ShiftDown():
+            self._isShiftLeftDragging = True
+        else:
+            self._isLeftDragging = True
+        
         if not self.HasCapture():
             self.CaptureMouse()
         event.Skip()
@@ -1271,6 +1278,58 @@ class MapCanvas(wx.Panel):
                         self._selected_waypoints.add(wp.id)
             
             self._isLeftDragging = False
+            self._dragStartPos = None
+            self._currentDragPos = None
+            if self.HasCapture():
+                self.ReleaseMouse()
+            self.Refresh()
+
+        if self._isShiftLeftDragging:
+            # Shift+drag selection - selects routes only
+            currentPos = event.GetPosition()
+            
+            # Check if it was a click (small movement) or a drag
+            dragVec = currentPos - self._dragStartPos
+            dist = (dragVec.x**2 + dragVec.y**2)**0.5
+            
+            network = self._datasMngr.getRoadNetwork()
+            
+            if dist >= 5 and network: # Drag selection for routes
+                # Calculate selection rect bounds
+                start_x, start_y = self._dragStartPos.x, self._dragStartPos.y
+                end_x, end_y = currentPos.x, currentPos.y
+                
+                x_min, x_max = min(start_x, end_x), max(start_x, end_x)
+                y_min, y_max = min(start_y, end_y), max(start_y, end_y)
+                
+                # Handling Ctrl
+                if not event.ControlDown():
+                    self._selected_waypoints.clear()
+                    self._selected_routes.clear()
+                    
+                # Convert screen rect to world coords
+                wx1, wz1 = self.screen_to_world(x_min, y_min)
+                wx2, wz2 = self.screen_to_world(x_max, y_max)
+                
+                w_min_x, w_max_x = min(wx1, wx2), max(wx1, wx2)
+                w_min_z, w_max_z = min(wz1, wz2), max(wz1, wz2)
+                
+                # Select routes that are ENTIRELY within the selection rect
+                for wp in network.waypoints.values():
+                    for out_id in wp.outgoing:
+                        route = (wp.id, out_id)
+                        
+                        # Get the other waypoint of the route
+                        out_wp = network.get_waypoint(out_id)
+                        if not out_wp:
+                            continue
+                        
+                        # Select route only if BOTH waypoints are in the rect
+                        if ((w_min_x <= wp.x <= w_max_x and w_min_z <= wp.z <= w_max_z) and
+                            (w_min_x <= out_wp.x <= w_max_x and w_min_z <= out_wp.z <= w_max_z)):
+                            self._selected_routes.add(route)
+            
+            self._isShiftLeftDragging = False
             self._dragStartPos = None
             self._currentDragPos = None
             if self.HasCapture():
@@ -1612,6 +1671,7 @@ class MapCanvas(wx.Panel):
 
     def _draw_selection_rect(self, dc):
         """Draw the selection rectangle if dragging."""
+        # Regular left drag (select waypoints)
         if self._isLeftDragging and self._dragStartPos and self._currentDragPos:
             # Check if it's a drag (dist > 5)
             dragVec = self._currentDragPos - self._dragStartPos
@@ -1639,6 +1699,43 @@ class MapCanvas(wx.Panel):
             # Fallback for standard DC if GC failed (no transparency brush on standard DC usually)
             dc.SetPen(wx.Pen(wx.Colour(255, 255, 255), 1, wx.PENSTYLE_SHORT_DASH))
             dc.SetBrush(wx.Brush(wx.Colour(255, 255, 255), wx.BRUSHSTYLE_TRANSPARENT))
+            
+            x = self._dragStartPos.x
+            y = self._dragStartPos.y
+            w = self._currentDragPos.x - x
+            h = self._currentDragPos.y - y
+            
+            dc.DrawRectangle(x, y, w, h)
+        
+        # Shift+drag (select routes) - draw in different color (green)
+        elif self._isShiftLeftDragging and self._dragStartPos and self._currentDragPos:
+            # Check if it's a drag (dist > 5)
+            dragVec = self._currentDragPos - self._dragStartPos
+            dist = (dragVec.x**2 + dragVec.y**2)**0.5
+            if dist < 5:
+                # Don't draw rect for simple click
+                return
+                
+            # Use GCDC for transparency if available
+            try:
+                gc = wx.GraphicsContext.Create(dc)
+                if gc:
+                    x = self._dragStartPos.x
+                    y = self._dragStartPos.y
+                    w = self._currentDragPos.x - x
+                    h = self._currentDragPos.y - y
+                    
+                    # Green color for route selection
+                    gc.SetPen(wx.Pen(wx.Colour(0, 255, 100, 200), 2, wx.PENSTYLE_SOLID))
+                    gc.SetBrush(wx.Brush(wx.Colour(0, 255, 100, 60)))
+                    gc.DrawRectangle(x, y, w, h)
+                    return
+            except:
+                pass
+            
+            # Fallback for standard DC
+            dc.SetPen(wx.Pen(wx.Colour(0, 255, 100), 2, wx.PENSTYLE_SOLID))
+            dc.SetBrush(wx.Brush(wx.Colour(0, 255, 100), wx.BRUSHSTYLE_TRANSPARENT))
             
             x = self._dragStartPos.x
             y = self._dragStartPos.y
