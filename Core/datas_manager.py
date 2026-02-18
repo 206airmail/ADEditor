@@ -1,4 +1,3 @@
-import collections
 import copy
 from io import BytesIO
 import os
@@ -536,7 +535,8 @@ class DatasManager(object):
     def swap_selected_routes(self, route_list):
         """
         Swap direction for multiple selected routes.
-        Aligns contiguous Dual routes to ensure consistent flow direction.
+        If selected routes are not uniform, first uniformize each continuous
+        chain so all segments follow the same traversal direction.
         
         Args:
             route_list: List of route tuples (from_id, to_id)
@@ -548,101 +548,146 @@ class DatasManager(object):
             return []
 
         before = self._create_snapshot()
-        # 1. Organize routes into continuous chains where possible
-        # This is critical for DUAL -> SINGLE swap to ensure all segments point in the same direction
-        
-        # Copy to avoid modifying original list while processing
-        available = list(route_list)
-        aligned_list = []
-        
-        while available:
-            # Start a new chain with the first available route
-            current = available.pop(0)
-            u, v = current
-            
-            chain = collections.deque([current])
-            
-            # Grow chain Forward (from v)
-            # Find a route in available that connects to v
-            pivot = v
-            while True:
-                found_idx = -1
-                found_route = None
-                
-                for i, r in enumerate(available):
-                    ru, rv = r
-                    if ru == pivot:
-                        # Perfect match (pivot -> rv)
-                        found_idx = i
-                        found_route = r
-                        pivot = rv
-                        break
-                    elif rv == pivot and self._roadNetwork.is_dual(ru, rv):
-                        # Reverse match on Dual (ru <-> pivot)
-                        # Flip it to align: (pivot -> ru)
-                        found_idx = i
-                        found_route = (rv, ru)
-                        pivot = ru
-                        break
-                
-                if found_idx != -1:
-                    available.pop(found_idx)
-                    chain.append(found_route)
-                else:
-                    break
-            
-            # Grow chain Backward (from u)
-            # Find a route in available that ends at u
-            pivot = u
-            while True:
-                found_idx = -1
-                found_route = None
-                
-                for i, r in enumerate(available):
-                    ru, rv = r
-                    if rv == pivot:
-                        # Perfect match (ru -> pivot)
-                        found_idx = i
-                        found_route = r
-                        pivot = ru
-                        break
-                    elif ru == pivot and self._roadNetwork.is_dual(ru, rv):
-                        # Reverse match on Dual (pivot <-> rv)
-                        # Flip it to align: (rv -> pivot)
-                        found_idx = i
-                        found_route = (rv, ru)
-                        pivot = rv
-                        break
-                
-                if found_idx != -1:
-                    available.pop(found_idx)
-                    chain.appendleft(found_route)
-                else:
-                    break
-            
-            aligned_list.extend(chain)
+        # Deduplicate by undirected edge.
+        unique_edges = {}
+        for u, v in route_list:
+            key = (min(u, v), max(u, v))
+            if key not in unique_edges:
+                unique_edges[key] = (u, v)
 
-        # 2. Apply swap on aligned routes and collect new valid segments
+        if not unique_edges:
+            return []
+
+        # Build adjacency (undirected graph of selected routes).
+        adjacency = {}
+        for a, b in unique_edges.keys():
+            adjacency.setdefault(a, set()).add(b)
+            adjacency.setdefault(b, set()).add(a)
+
+        visited_nodes = set()
+
+        def _edge_state(u, v):
+            # Relative to oriented edge u->v
+            if self._roadNetwork.is_dual(u, v):
+                return "double"
+            if self._roadNetwork.is_regular(u, v) or self._roadNetwork.is_reverse(u, v):
+                return "sens1"
+            if self._roadNetwork.is_regular(v, u) or self._roadNetwork.is_reverse(v, u):
+                return "sens2"
+            return "none"
+
+        def _set_edge_state(u, v, target):
+            # target in {"sens1","sens2","double"}, relative to u->v
+            wp_u = self._roadNetwork.get_waypoint(u)
+            wp_v = self._roadNetwork.get_waypoint(v)
+            if not wp_u or not wp_v:
+                return False
+
+            while v in wp_u.outgoing:
+                wp_u.outgoing.remove(v)
+            while v in wp_u.incoming:
+                wp_u.incoming.remove(v)
+            while u in wp_v.outgoing:
+                wp_v.outgoing.remove(u)
+            while u in wp_v.incoming:
+                wp_v.incoming.remove(u)
+
+            if target in ("sens1", "double"):
+                wp_u.outgoing.append(v)
+                wp_v.incoming.append(u)
+            if target in ("sens2", "double"):
+                wp_v.outgoing.append(u)
+                wp_u.incoming.append(v)
+            return True
+
+        def _get_edge_key(a, b):
+            return (min(a, b), max(a, b))
+
+        # Process each connected component independently.
+        component_oriented_edges = []
+        component_target_states = []
+
+        for start in adjacency.keys():
+            if start in visited_nodes:
+                continue
+
+            # Collect nodes in this component
+            stack = [start]
+            comp_nodes = []
+            visited_nodes.add(start)
+            while stack:
+                n = stack.pop()
+                comp_nodes.append(n)
+                for nxt in adjacency.get(n, ()):
+                    if nxt not in visited_nodes:
+                        visited_nodes.add(nxt)
+                        stack.append(nxt)
+
+            # Build edge set for this component.
+            comp_edge_keys = set()
+            for node in comp_nodes:
+                for nxt in adjacency.get(node, ()):
+                    comp_edge_keys.add(_get_edge_key(node, nxt))
+
+            # Preferred start: endpoint (degree 1) when possible.
+            endpoints = [n for n in comp_nodes if len(adjacency.get(n, ())) == 1]
+            if endpoints:
+                path_start = min(endpoints)
+            else:
+                path_start = min(comp_nodes)
+
+            # Traverse all edges once; orientation follows traversal direction.
+            oriented_edges = []
+            used_edges = set()
+            node_stack = [path_start]
+            while node_stack:
+                node = node_stack.pop()
+                for nxt in sorted(adjacency.get(node, ())):
+                    ek = _get_edge_key(node, nxt)
+                    if ek in used_edges:
+                        continue
+                    if ek not in comp_edge_keys:
+                        continue
+                    used_edges.add(ek)
+                    oriented_edges.append((node, nxt))
+                    node_stack.append(nxt)
+
+            # Safety: component might have disconnected traversal leftovers in rare graph shapes.
+            if len(used_edges) < len(comp_edge_keys):
+                for a, b in sorted(comp_edge_keys):
+                    if (a, b) in used_edges:
+                        continue
+                    oriented_edges.append((a, b))
+
+            states = [_edge_state(u, v) for (u, v) in oriented_edges if _edge_state(u, v) != "none"]
+            if not states:
+                continue
+
+            unique_states = set(states)
+            if len(unique_states) > 1:
+                target_state = "sens1"  # Uniformize this component only.
+            else:
+                cur = states[0]
+                if cur == "sens1":
+                    target_state = "sens2"
+                elif cur == "sens2":
+                    target_state = "double"
+                else:  # double
+                    target_state = "sens1"
+
+            component_oriented_edges.append(oriented_edges)
+            component_target_states.append(target_state)
+
+        if not component_oriented_edges:
+            return []
+
         new_selection = []
         modified = False
-        
-        for from_id, to_id in aligned_list:
-            if self._roadNetwork.swap_route_direction(from_id, to_id):
-                modified = True
-                
-                # Determine the new valid direction for selection
-                # If from->to exists (Regular or Dual), keep (from, to)
-                if self._roadNetwork.is_regular(from_id, to_id) or self._roadNetwork.is_dual(from_id, to_id):
-                    new_selection.append((from_id, to_id))
-                # If to->from exists (Reverse or Regular in other direction), switch to (to, from)
-                elif self._roadNetwork.is_regular(to_id, from_id) or self._roadNetwork.is_dual(to_id, from_id):
-                    new_selection.append((to_id, from_id))
-                elif self._roadNetwork.is_reverse(from_id, to_id):
-                     # is_reverse(u,v) implies v->u exists
-                     new_selection.append((to_id, from_id))
-                else:
-                     # Fallback, keep original if unsure (though implies broken link)
-                     new_selection.append((from_id, to_id))
+        for oriented_edges, target_state in zip(component_oriented_edges, component_target_states):
+            for u, v in oriented_edges:
+                if _set_edge_state(u, v, target_state):
+                    modified = True
+                    new_selection.append((u, v))
         
         if modified:
             self._record_undo_snapshot(before)
