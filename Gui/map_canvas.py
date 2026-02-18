@@ -1494,53 +1494,69 @@ class MapCanvas(wx.Panel):
         return None
 
     def _find_route_chain(self, start_route):
-        """Find all connected route segments forming a complete chain.
+        """Find a direction-continuous route chain from a start segment.
         
         Args:
             start_route: Tuple (from_id, to_id) representing the starting segment
             
         Returns:
-            Set of route tuples forming the complete chain
+            Set of route tuples forming the chain.
         """
         network = self._datasMngr.getRoadNetwork()
         if not network:
             return {start_route}
         
-        chain = set()
-        to_visit = [start_route]
-        visited = set()
-        
-        while to_visit:
-            current = to_visit.pop()
-            if current in visited:
-                continue
-            
-            visited.add(current)
-            chain.add(current)
-            
-            from_id, to_id = current
-            from_wp = network.get_waypoint(from_id)
-            to_wp = network.get_waypoint(to_id)
-            
-            if not from_wp or not to_wp:
-                continue
-            
-            # Explore forward: from to_wp, find all outgoing connections
-            # But only if to_wp has exactly one incoming (current) and one or more outgoing
-            # This creates a "chain" concept
-            if to_wp:
-                for next_id in to_wp.outgoing:
-                    next_route = (to_id, next_id)
-                    if next_route not in visited:
-                        to_visit.append(next_route)
-            
-            # Explore backward: from from_wp, find all incoming connections
-            if from_wp:
-                for prev_id in from_wp.incoming:
-                    prev_route = (prev_id, from_id)
-                    if prev_route not in visited:
-                        to_visit.append(prev_route)
-        
+        chain = {start_route}
+        start_from, start_to = start_route
+
+        # Forward propagation: ... -> start_to -> next ...
+        cur_from, cur_to = start_from, start_to
+        while True:
+            to_wp = network.get_waypoint(cur_to)
+            if not to_wp:
+                break
+
+            # Keep only strict forward candidates (exclude immediate back edge).
+            candidates = []
+            for next_id in to_wp.outgoing:
+                if next_id == cur_from:
+                    continue
+                next_route = (cur_to, next_id)
+                if next_route not in chain:
+                    candidates.append(next_route)
+
+            # Stop on endpoint or branch: not a single direction-continuous path anymore.
+            if len(candidates) != 1:
+                break
+
+            nxt = candidates[0]
+            chain.add(nxt)
+            cur_from, cur_to = nxt
+
+        # Backward propagation: ... -> prev -> start_from -> ...
+        cur_from, cur_to = start_from, start_to
+        while True:
+            from_wp = network.get_waypoint(cur_from)
+            if not from_wp:
+                break
+
+            # Keep only strict backward candidates (exclude immediate back edge).
+            candidates = []
+            for prev_id in from_wp.incoming:
+                if prev_id == cur_to:
+                    continue
+                prev_route = (prev_id, cur_from)
+                if prev_route not in chain:
+                    candidates.append(prev_route)
+
+            # Stop on endpoint or branch.
+            if len(candidates) != 1:
+                break
+
+            prv = candidates[0]
+            chain.add(prv)
+            cur_from, cur_to = prv
+
         return chain
 
     def _get_intermediate_waypoints_from_routes(self, routes):
