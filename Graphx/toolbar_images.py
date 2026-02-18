@@ -177,7 +177,19 @@ def build_ID_ROUTE_SWAPDIR() -> str:
     return _svg_base(body, accent="#34d399")
 
 
-def build_ID_ROUTE_ADD() -> str:
+def build_ID_ROUTE_REVERSE() -> str:
+    body = """
+  <circle cx="8.5" cy="16" r="2.2" fill="#0f172a"/>
+  <circle cx="23.5" cy="16" r="2.2" fill="#0f172a"/>
+  <path d="M8 16h16" stroke="url(#accent)" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="m14 12.8 4 3.2-4 3.2" stroke="url(#accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M25 9.6c-2.5-1.8-5.2-2.7-8.2-2.7-2.5 0-4.8.6-6.9 1.9" stroke="#0f172a" stroke-width="1.8" stroke-linecap="round" opacity="0.92"/>
+  <path d="m12.2 6.8-2.8 1.9 3.4.3" fill="none" stroke="#0f172a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.92"/>
+"""
+    return _svg_base(body, accent="#38bdf8")
+
+
+def build_ID_ROUTE_ADD_LINE() -> str:
     body = """
   <circle cx="9.5" cy="11.5" r="2.4" fill="#f8fafc"/>
   <circle cx="20.5" cy="18.5" r="2.4" fill="#f8fafc"/>
@@ -185,7 +197,20 @@ def build_ID_ROUTE_ADD() -> str:
   <line x1="24.2" y1="9.5" x2="24.2" y2="14.5" stroke="#f8fafc" stroke-width="2" stroke-linecap="round"/>
   <line x1="21.7" y1="12" x2="26.7" y2="12" stroke="#f8fafc" stroke-width="2" stroke-linecap="round"/>
 """
-    return _svg_base(body, accent="#38bdf8")
+    return _svg_base(body, accent="#34d399")
+
+
+def build_ID_ROUTE_ADD_CURVE() -> str:
+    body = """
+  <path d="M8.8 22.2C14.8 22.2 23.2 16.2 23.2 9.8" stroke="url(#accent)" stroke-width="2.3" stroke-linecap="round"/>
+  <path d="m16.8 16.7 3.3.2-1.3 3" fill="none" stroke="url(#accent)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M6 22.2h2.8M23.2 7.2v2.8" stroke="#0f172a" stroke-width="1.6" stroke-linecap="round" opacity="0.85"/>
+  <circle cx="8.8" cy="22.2" r="2.3" fill="#0f172a"/>
+  <circle cx="23.2" cy="9.8" r="2.3" fill="#0f172a"/>
+  <line x1="27.2" y1="20.5" x2="27.2" y2="25.3" stroke="#0f172a" stroke-width="2" stroke-linecap="round"/>
+  <line x1="24.8" y1="22.9" x2="29.6" y2="22.9" stroke="#0f172a" stroke-width="2" stroke-linecap="round"/>
+"""
+    return _svg_base(body, accent="#34d399")
 
 
 def build_ID_MARKER_ADD() -> str:
@@ -230,7 +255,10 @@ _ID_GENERATORS: Dict[str, Callable[[], str]] = {
     "ID_ZOOM_RECT": build_ID_ZOOM_RECT,
     "ID_DELETE": build_ID_DELETE,
     "ID_ROUTE_SWAPDIR": build_ID_ROUTE_SWAPDIR,
-    "ID_ROUTE_ADD": build_ID_ROUTE_ADD,
+    "ID_ROUTE_REVERSE": build_ID_ROUTE_REVERSE,
+    "ID_ROUTE_ADD_LINE": build_ID_ROUTE_ADD_LINE,
+    "ID_ROUTE_ADD_CURVE": build_ID_ROUTE_ADD_CURVE,
+    "ID_ROUTE_ADD": build_ID_ROUTE_ADD_LINE,
     "ID_MARKER_ADD": build_ID_MARKER_ADD,
     "ID_MARKER_EDIT": build_ID_MARKER_EDIT,
     "ID_MARKER_DEL": build_ID_MARKER_DEL,
@@ -251,7 +279,10 @@ _FILE_TO_ID: Dict[str, str] = {
     "zoom_window.svg": "ID_ZOOM_RECT",
     "delete.svg": "ID_DELETE",
     "route_swapdir.svg": "ID_ROUTE_SWAPDIR",
-    "route_add.svg": "ID_ROUTE_ADD",
+    "route_reverse.svg": "ID_ROUTE_REVERSE",
+    "route_add_line.svg": "ID_ROUTE_ADD_LINE",
+    "route_add_curve.svg": "ID_ROUTE_ADD_CURVE",
+    "route_add.svg": "ID_ROUTE_ADD_LINE",
     "marker_add.svg": "ID_MARKER_ADD",
     "marker_edit.svg": "ID_MARKER_EDIT",
     "marker_del.svg": "ID_MARKER_DEL",

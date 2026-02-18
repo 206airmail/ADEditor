@@ -30,7 +30,9 @@ class MainFrame(wx.Frame):
         # Needed but unexisting IDs
         self.ID_ZOOM_RECT = wx.NewIdRef()
         self.ID_ROUTE_SWAPDIR = wx.NewIdRef()
-        self.ID_ROUTE_ADD = wx.NewIdRef()
+        self.ID_ROUTE_ADD_LINE = wx.NewIdRef()
+        self.ID_ROUTE_ADD_CURVE = wx.NewIdRef()
+        self.ID_ROUTE_REVERSE = wx.NewIdRef()
         self.ID_MARKER_ADD = wx.NewIdRef()
         self.ID_MARKER_EDIT = wx.NewIdRef()
         self.ID_MARKER_DEL = wx.NewIdRef()
@@ -156,7 +158,9 @@ class MainFrame(wx.Frame):
         # Edition tools
         _add_tool(wx.ID_DELETE, wx.GetStockLabel(wx.ID_DELETE), "ID_DELETE", _("Delete selected item(s)"))
         _add_tool(self.ID_ROUTE_SWAPDIR, _("Direction"), "ID_ROUTE_SWAPDIR", _("Swap Route Direction"))
-        _add_tool(self.ID_ROUTE_ADD, _("Connect"), "ID_ROUTE_ADD", _("Connect 2 waypoints"))
+        _add_tool(self.ID_ROUTE_REVERSE, _("Reverse"), "ID_ROUTE_REVERSE", _("Reverse Route"))
+        _add_tool(self.ID_ROUTE_ADD_LINE, _("Connect"), "ID_ROUTE_ADD_LINE", _("Connect 2 waypoints with a segment"))
+        _add_tool(self.ID_ROUTE_ADD_CURVE, _("Curve"), "ID_ROUTE_ADD_CURVE", _("Connect 2 waypoints with a curve"))
         _add_tool(self.ID_MARKER_ADD, _("Add Marker"), "ID_MARKER_ADD", _("Create Map Marker"))
         _add_tool(self.ID_MARKER_EDIT, _("Edit Marker"), "ID_MARKER_EDIT", _("Edit selected Map Marker"))
         _add_tool(self.ID_MARKER_DEL, _("Del Marker"), "ID_MARKER_DEL", _("Delete Map Marker"))
@@ -189,6 +193,12 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnZoomWindow, id=self.ID_ZOOM_RECT)
         self.Bind(wx.EVT_MENU, self.OnDeleteSelection, id=wx.ID_DELETE)
         self.Bind(wx.EVT_MENU, self.OnSwapRouteDirection, id=self.ID_ROUTE_SWAPDIR)
+        self.Bind(wx.EVT_MENU, self.OnReverseRoute, id=self.ID_ROUTE_REVERSE)
+        self.Bind(wx.EVT_MENU, self.OnAddSegment, id=self.ID_ROUTE_ADD_LINE)
+        self.Bind(wx.EVT_MENU, self.OnAddCurve, id=self.ID_ROUTE_ADD_CURVE)
+        self.Bind(wx.EVT_MENU, self.OnAddMarker, id=self.ID_MARKER_ADD)
+        self.Bind(wx.EVT_MENU, self.OnEditMarker, id=self.ID_MARKER_EDIT)
+        self.Bind(wx.EVT_MENU, self.OnDelMarker, id=self.ID_MARKER_DEL)
         # Update UI events
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_Save, id=wx.ID_SAVE)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_SaveAs, id=wx.ID_SAVEAS)
@@ -198,14 +208,12 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_Redo, id=wx.ID_REDO)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_Delete, id=wx.ID_DELETE)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_SwapDir, id=self.ID_ROUTE_SWAPDIR)
-        self.Bind(wx.EVT_MENU, self.OnAddRoute, id=self.ID_ROUTE_ADD)
-        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_AddRoute, id=self.ID_ROUTE_ADD)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_Reverse, id=self.ID_ROUTE_REVERSE)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_AddRouteLine, id=self.ID_ROUTE_ADD_LINE)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_AddRouteCurve, id=self.ID_ROUTE_ADD_CURVE)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_AddMark, id=self.ID_MARKER_ADD)
-        self.Bind(wx.EVT_MENU, self.OnAddMarker, id=self.ID_MARKER_ADD)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_EditMark, id=self.ID_MARKER_EDIT)
-        self.Bind(wx.EVT_MENU, self.OnEditMarker, id=self.ID_MARKER_EDIT)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_DelMark, id=self.ID_MARKER_DEL)
-        self.Bind(wx.EVT_MENU, self.OnDelMarker, id=self.ID_MARKER_DEL)
 
     def OnClose(self, event):
         nb = self._fileHistory.Count
@@ -663,8 +671,8 @@ class MainFrame(wx.Frame):
         """Exit the application"""
         self.Close()
     
-    def OnAddRoute(self, event):
-        """Create a route between two selected waypoints."""
+    def OnAddSegment(self, event):
+        """Create a segment between two selected waypoints."""
         selected_wp = list(self.mapCanvas.GetSelectedWaypoints())
         if len(selected_wp) != 2:
             return
@@ -689,6 +697,11 @@ class MainFrame(wx.Frame):
         else:
             wx.MessageBox(_("Could not create route. Connection might already exist."), 
                          _("Error"), wx.OK | wx.ICON_ERROR)
+    
+    def OnAddCurve(self, event):
+        """Create a curved segment between two selected waypoints."""
+        wx.MessageBox("We are sorry, but this feature is not yet implemented.", 
+                     "Reverse Route", wx.OK | wx.ICON_EXCLAMATION)
 
     def OnAddMarker(self, event):
         """Add a marker to the selected waypoint."""
@@ -925,6 +938,11 @@ class MainFrame(wx.Frame):
         else:
             wx.MessageBox(_("Failed to swap route direction."), 
                          _("Error"), wx.OK | wx.ICON_ERROR)
+    
+    def OnReverseRoute(self, event):
+        """Handle route reversal from ribbon button."""
+        wx.MessageBox("We are sorry, but this feature is not yet implemented.", 
+                     "Reverse Route", wx.OK | wx.ICON_EXCLAMATION)
 
     def OnZoomIn(self, event):
         """Handle Zoom In."""
@@ -981,8 +999,13 @@ class MainFrame(wx.Frame):
         bEnable = (infos['total'] > 0) and (infos['routes'] > 0)
         event.Enable(bEnable)
     
-    def OnUpdateUI_AddRoute(self, event):
-        """Update UI state of the Add Route toolbar item."""
+    def OnUpdateUI_Reverse(self, event):  
+        """Update UI state of the Reverse Route toolbar item."""
+        # For now, we have no reverse support, so always disable
+        event.Enable(False)
+    
+    def OnUpdateUI_AddRouteLine(self, event):
+        """Update UI state of the Add Route Segment toolbar item."""
         infos = self.mapCanvas.GetSelectionInfo()
         bEnable = (infos['total'] == 2) and (infos['waypoints'] == 2)
         
@@ -995,6 +1018,11 @@ class MainFrame(wx.Frame):
                     bEnable = False
         
         event.Enable(bEnable)
+    
+    def OnUpdateUI_AddRouteCurve(self, event):
+        """Update UI state of the Add Route Curve toolbar item."""
+        # For now, we have no curve support, so always disable
+        event.Enable(False)
     
     def OnUpdateUI_AddMark(self, event):
         """Update UI state of the Add Marker toolbar item."""
