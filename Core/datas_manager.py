@@ -687,7 +687,11 @@ class DatasManager(object):
             for u, v in oriented_edges:
                 if _set_edge_state(u, v, target_state):
                     modified = True
-                    new_selection.append((u, v))
+                    if target_state == "sens2":
+                        # Keep UI selection aligned with actual visible direction.
+                        new_selection.append((v, u))
+                    else:
+                        new_selection.append((u, v))
         
         if modified:
             self._record_undo_snapshot(before)
