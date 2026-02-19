@@ -245,7 +245,7 @@ class AddCurveDialog(wx.Dialog):
                     vy = next_wp.y - wp.y
                     vz = next_wp.z - wp.z
                     target_vec = (vx, vy, vz)
-                    target_vec = (vx, vy, vz)
+
                     
         if target_vec:
             vx, vy, vz = target_vec

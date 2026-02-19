@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ADEditor software\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-19 00:07+0100\n"
-"PO-Revision-Date: 2026-02-19 00:09+0100\n"
+"POT-Creation-Date: 2026-02-20 00:12+0100\n"
+"PO-Revision-Date: 2026-02-20 00:13+0100\n"
 "Last-Translator: Xaviou <x.psoud@gmail.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -98,6 +98,56 @@ msgstr "Basé sur"
 #: G:\Dev\_Python\ADEditor\Dialogs\dialog_about.py:25
 msgid "and"
 msgstr "et"
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_add_curve.py:11
+msgid "Add Curve"
+msgstr "Ajouter une courbe"
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_add_curve.py:32
+msgid "Intermediate Waypoints:"
+msgstr "Points de passage intermédiaires :"
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_add_curve.py:39
+msgid "Tangency"
+msgstr "Tangence"
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_add_curve.py:44
+msgid "Start (from selected):"
+msgstr "Démarrer (à partir de la sélection) :"
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_add_curve.py:46
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_add_curve.py:66
+msgid "Align with Incoming"
+msgstr "Aligner avec l'arrivée"
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_add_curve.py:46
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_add_curve.py:66
+msgid "Align with Outgoing"
+msgstr "Aligner avec le départ"
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_add_curve.py:64
+msgid "End (to selected):"
+msgstr "Fin (à la sélection) :"
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_add_curve.py:77
+msgid "One Way (Start -> End)"
+msgstr "Aller simple (Début -> Fin)"
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_add_curve.py:78
+msgid "One Way (End -> Start)"
+msgstr "Aller simple (Fin -> Début)"
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_add_curve.py:79
+msgid "Dual Way"
+msgstr "Double Sens"
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_add_curve.py:80
+msgid "Reverse (Start -> End)"
+msgstr "Inverser (Début -> Fin)"
+
+#: G:\Dev\_Python\ADEditor\Dialogs\dialog_add_curve.py:82
+msgid "Route Direction"
+msgstr "Direction de l'itinéraire"
 
 #: G:\Dev\_Python\ADEditor\Dialogs\dialog_marker.py:22
 msgid "Name:"
@@ -343,6 +393,8 @@ msgid "Reverse"
 msgstr "Inverser"
 
 #: G:\Dev\_Python\ADEditor\Gui\main_frame.py:161
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:988
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:1005
 msgid "Reverse Route"
 msgstr "Inverser la route"
 
@@ -363,7 +415,7 @@ msgid "Connect 2 waypoints with a curve"
 msgstr "Relier 2 points de passage par une courbe"
 
 #: G:\Dev\_Python\ADEditor\Gui\main_frame.py:164
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:721
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:756
 msgid "Add Marker"
 msgstr "Ajouter un marqueur"
 
@@ -372,7 +424,7 @@ msgid "Create Map Marker"
 msgstr "Créer un marqueur sur la carte"
 
 #: G:\Dev\_Python\ADEditor\Gui\main_frame.py:165
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:749
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:784
 msgid "Edit Marker"
 msgstr "Éditer le marqueur"
 
@@ -659,20 +711,29 @@ msgstr "Itinéraire créé : {0} -> {1}"
 msgid "Could not create route. Connection might already exist."
 msgstr "Impossible de créer l'itinéraire. La connexion existe peut-être déjà."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:766
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:733
+#, python-brace-format
+msgid "Curve created with {0} intermediate points."
+msgstr "Courbe créée avec {0} points intermédiaires."
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:735
+msgid "Failed to create curve."
+msgstr "Échec de la création de la courbe."
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:801
 msgid "Are you sure you want to delete this marker?"
 msgstr "Êtes-vous sûr de vouloir supprimer ce marqueur ?"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:767
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:802
 msgid "Confirm Delete"
 msgstr "Confirmer la suppression"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:797
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:832
 msgid "No items selected."
 msgstr "Aucun élément sélectionné."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:816
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:835
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:851
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:870
 #, python-brace-format
 msgid ""
 "You are about to delete {0} route(s).\n"
@@ -681,12 +742,12 @@ msgstr ""
 "Vous êtes sur le point de supprimer {0} itinéraire(s).\n"
 "\n"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:817
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:852
 #, python-brace-format
 msgid "{0} intermediate waypoint(s) are part of these routes.\n"
 msgstr "{0} points de passage intermédiaires font partie de ces itinéraires.\n"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:821
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:856
 #, python-brace-format
 msgid ""
 "{0} endpoint waypoint(s) will become orphaned and will be deleted.\n"
@@ -696,16 +757,16 @@ msgstr ""
 "supprimés.\n"
 "\n"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:823
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:858
 msgid "Do you want to delete the intermediate waypoints as well?"
 msgstr "Voulez-vous également supprimer les points de passage intermédiaires ?"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:825
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:838
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:860
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:873
 msgid "Delete Routes"
 msgstr "Supprimer les itinéraires"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:836
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:871
 #, python-brace-format
 msgid ""
 "{0} endpoint waypoint(s) will become orphaned and will be deleted "
@@ -714,77 +775,96 @@ msgstr ""
 "{0} points de passage finaux deviendront orphelins et seront automatiquement "
 "supprimés."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:851
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:886
 #, python-brace-format
 msgid "{0} selected"
 msgstr "{0} sélectionné"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:855
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:890
 #, python-brace-format
 msgid "{0} intermediate"
 msgstr "{0} intermédiaire"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:859
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:894
 #, python-brace-format
 msgid "{0} orphan"
 msgstr "{0} orphelin"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:862
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:903
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:897
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:938
 #, python-brace-format
 msgid "{0} waypoint(s)"
 msgstr "{0} point(s) de passage"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:866
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:901
 #, python-brace-format
 msgid "{0} waypoint(s) ({1})"
 msgstr "{0} point(s) de passage ({1})"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:869
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:905
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:904
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:940
 #, python-brace-format
 msgid "{0} route(s)"
 msgstr "{0} itinéraire(s)"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:871
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:906
 #, python-brace-format
 msgid "Delete {0}?"
 msgstr "Supprimer {0} ?"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:873
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:908
 msgid "Confirm Deletion"
 msgstr "Confirmer la suppression"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:906
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:941
 #, python-brace-format
 msgid "Successfully deleted {0}."
 msgstr "Suppression réussie : {0}."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:909
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:944
 msgid "Failed to delete selected items."
 msgstr "Impossible de supprimer les éléments sélectionnés."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:918
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:953
 msgid "No routes selected."
 msgstr "Aucun itinéraire sélectionné."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:919
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:954
 msgid "Swap Direction"
 msgstr "Changer la direction"
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:937
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:972
 #, python-brace-format
 msgid "Swapped direction for {0} route(s)."
 msgstr "Direction changée pour {0} itinéraire(s)."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:939
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:974
 msgid "Failed to swap route direction."
 msgstr "Échec du changement de direction de l'itinéraire."
 
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:962
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:986
+msgid ""
+"The selection contains multiple discontinuous series of segments.\n"
+"Toggling reverse mode can only be done on a single continuous series of "
+"segments."
+msgstr ""
+"La sélection contient plusieurs séries discontinues de segments.\n"
+"Le mode inversé ne peut être activé que sur une seule série continue de "
+"segments."
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:1000
+#, python-brace-format
+msgid "Toggled reverse mode for {0} segment(s)."
+msgstr "Mode inversé activé pour {0} segment(s)."
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:1004
+msgid "No regular or reverse segments in selection."
+msgstr "Aucun segment régulier ou inversé dans la sélection."
+
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:1024
 msgid "Click and drag to define zoom area"
 msgstr "Cliquez et faites glisser pour définir la zone de zoom"
 
-#: G:\Dev\_Python\ADEditor\Gui\map_canvas.py:502
+#: G:\Dev\_Python\ADEditor\Gui\map_canvas.py:506
 msgid "No map loaded"
 msgstr "Aucune carte chargée"

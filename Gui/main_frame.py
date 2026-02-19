@@ -975,7 +975,7 @@ class MainFrame(wx.Frame):
                          _("Error"), wx.OK | wx.ICON_ERROR)
     
     def OnReverseRoute(self, event):
-        """Toggle reverse driving (marche arrière) on the selected route segments."""
+        """Toggle reverse driving on the selected route segments."""
         selected = self.mapCanvas.GetSelectedRoutes()
         if not selected:
             return
@@ -983,9 +983,9 @@ class MainFrame(wx.Frame):
         # Validate that the selection forms a single continuous chain
         if not self._are_routes_continuous(selected):
             wx.MessageBox(
-                _("La sélection contient plusieurs séries discontinues de segments.\n"
-                  "Le passage en marche arrière ne peut se faire que sur une série continue de segments."),
-                _("Marche arrière"),
+                _("The selection contains multiple discontinuous series of segments.\n"
+                  "Toggling reverse mode can only be done on a single continuous series of segments."),
+                _("Reverse Route"),
                 wx.OK | wx.ICON_WARNING
             )
             return
@@ -997,12 +997,12 @@ class MainFrame(wx.Frame):
             self.mapCanvas.RefreshMapData()
             self._updateMainTitle()
             self.SetStatusText(
-                _("Marche arrière basculée sur {0} segment(s).").format(len(modified))
+                _("Toggled reverse mode for {0} segment(s).").format(len(modified))
             )
         else:
             wx.MessageBox(
-                _("Aucun segment régulier ou marche-arrière dans la sélection."),
-                _("Marche arrière"),
+                _("No regular or reverse segments in selection."),
+                _("Reverse Route"),
                 wx.OK | wx.ICON_INFORMATION
             )
 

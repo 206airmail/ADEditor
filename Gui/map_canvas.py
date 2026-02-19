@@ -611,7 +611,7 @@ class MapCanvas(wx.Panel):
                 
                 dc.DrawLine(sx1, sy1, sx2, sy2)
                 
-                # Draw arrow for unidirectional connections (Regular and Reverse/marche arriere)
+                # Draw arrow for unidirectional connections (Regular and Reverse)
                 if not network.is_dual(wp.id, out_id):
                     import math
                     # Calculate midpoint
@@ -619,7 +619,7 @@ class MapCanvas(wx.Panel):
                     mid_y = (sy1 + sy2) / 2
                     
                     # Calculate direction angle
-                    # For reverse (marche arriere) segments, invert the arrow to show
+                    # For reverse segments, invert the arrow to show
                     # the vehicle physically moves backward along the segment direction.
                     angle = math.atan2(sy2 - sy1, sx2 - sx1)
                     if network.is_reverse(wp.id, out_id):
@@ -663,14 +663,14 @@ class MapCanvas(wx.Panel):
                 dc.SetPen(wx.Pen(COLOR_SELECTED_ROUTE, selectedLineWidth))
                 dc.DrawLine(sx1, sy1, sx2, sy2)
                 
-                # Draw arrow for unidirectional connections (Regular and Reverse/marche arriere)
+                # Draw arrow for unidirectional connections (Regular and Reverse)
                 if not network.is_dual(from_id, to_id):
                     # Calculate midpoint
                     mid_x = (sx1 + sx2) / 2
                     mid_y = (sy1 + sy2) / 2
                     
                     # Calculate direction angle
-                    # For reverse (marche arriere) segments, invert the arrow.
+                    # For reverse segments, invert the arrow.
                     angle = math.atan2(sy2 - sy1, sx2 - sx1)
                     if network.is_reverse(from_id, to_id):
                         angle += math.pi
