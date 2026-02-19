@@ -532,6 +532,56 @@ class DatasManager(object):
             return True
         return False
     
+    def create_curve(self, start_id, end_id, intermediate_points, direction_mode):
+        """
+        Create a curve of waypoints between start_id and end_id.
+        intermediate_points: list of (x, y, z) tuples.
+        direction_mode: 0=S->E, 1=E->S, 2=Dual, 3=Reverse (S->E)
+        """
+        if not self._roadNetwork:
+            return False
+            
+        before = self._create_snapshot()
+        
+        # Create intermediate waypoints
+        created_ids = []
+        for p in intermediate_points:
+            new_id = self._roadNetwork.get_next_id()
+            new_wp = Waypoint(id=new_id, x=p[0], y=p[1], z=p[2])
+            self._roadNetwork.add_waypoint(new_wp)
+            created_ids.append(new_id)
+            
+        # Full sequence of IDs
+        sequence = [start_id] + created_ids + [end_id]
+        
+        # Create connections
+        for i in range(len(sequence) - 1):
+            u = sequence[i]
+            v = sequence[i+1]
+            
+            if direction_mode == 0: # S->E
+                self._roadNetwork.add_route(u, v)
+            elif direction_mode == 1: # E->S
+                self._roadNetwork.add_route(v, u)
+            elif direction_mode == 2: # Dual
+                self._roadNetwork.add_route(u, v)
+                self._roadNetwork.add_route(v, u)
+            elif direction_mode == 3: # Reverse S->E
+                # Create Regular first
+                self._roadNetwork.add_route(u, v)
+                # Then convert to Reverse (remove u from v.incoming)
+                wp_v = self._roadNetwork.get_waypoint(v)
+                if wp_v and u in wp_v.incoming:
+                    wp_v.incoming.remove(u)
+
+        if created_ids or len(sequence) > 2:
+            self._record_undo_snapshot(before)
+            self._set_network_modified()
+            return True
+            
+        return False
+
+    
     def swap_selected_routes(self, route_list):
         """
         Swap direction for multiple selected routes.

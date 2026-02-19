@@ -41,6 +41,10 @@ class MapCanvas(wx.Panel):
         self._selected_waypoints = set()
         self._selected_routes = set()  # Store selected routes as (from_id, to_id) tuples
         
+        # Preview state (for tools like Add Curve)
+        # Dictionary with keys: 'points' (list of (x, y, z)), 'connections' (list of (i, j) indices into points)
+        self._preview_curve_data = None 
+        
         # Waypoint dragging state
         self._isDraggingWaypoint = False
         self._draggedWaypointId = None
@@ -683,6 +687,30 @@ class MapCanvas(wx.Panel):
                     dc.DrawLine(int(mid_x), int(mid_y), int(ax2), int(ay2))
 
         
+        if self._preview_curve_data:
+            points = self._preview_curve_data.get('points', [])
+            connections = self._preview_curve_data.get('connections', [])
+            
+            if points:
+                # Draw connections first
+                dc.SetPen(wx.Pen(wx.Colour(255, 255, 0), 2, wx.PENSTYLE_DOT))  # Yellow dotted line
+                screen_points = []
+                for p in points:
+                    screen_points.append(self.world_to_screen(p[0], p[2]))
+                
+                for i, j in connections:
+                    if 0 <= i < len(screen_points) and 0 <= j < len(screen_points):
+                        x1, y1 = screen_points[i]
+                        x2, y2 = screen_points[j]
+                        dc.DrawLine(x1, y1, x2, y2)
+                
+                # Draw nodes
+                dc.SetBrush(wx.Brush(wx.Colour(255, 255, 0)))
+                dc.SetPen(wx.Pen(wx.Colour(0, 0, 0), 1))
+                r = 3
+                for sx, sy in screen_points:
+                    dc.DrawCircle(sx, sy, r)
+
         # Draw waypoint nodes on top
         # Fixed size radius regardless of zoom level
         node_radius = 5  
@@ -1823,3 +1851,23 @@ class MapCanvas(wx.Panel):
             dc.SetPen(wx.Pen(wx.Colour(0, 120, 255), 2, wx.PENSTYLE_SOLID))
             dc.SetBrush(wx.Brush(wx.Colour(0, 120, 255), wx.BRUSHSTYLE_TRANSPARENT))
             dc.DrawRectangle(x, y, w, h)
+
+    def ShowPreviewCurve(self, points, connections):
+        """
+        Display a temporary preview of a curve.
+        
+        Args:
+            points: List of (x, y, z) tuples for the new waypoints (including start/end if needed)
+            connections: List of (start_idx, end_idx) tuples defining segments between points
+        """
+        self._preview_curve_data = {
+            'points': points,
+            'connections': connections
+        }
+        self.Refresh()
+        
+    def ClearPreview(self):
+        """Clear the preview curve."""
+        self._preview_curve_data = None
+        self.Refresh()
+

@@ -6,7 +6,7 @@ import shutil
 from Core import RoadNetwork, Waypoint, MapMarker, SettingsManager, AppVersion, DatasManager, FarmSimHelper
 from Graphx import mainImages, getToolbarBitmaps
 from Gui import MapCanvas
-from Dialogs import NewProjectDialog, AboutDialog, SettingsDialog, MarkerDialog
+from Dialogs import NewProjectDialog, AboutDialog, SettingsDialog, MarkerDialog, AddCurveDialog
 
 _ = wx.GetTranslation
 
@@ -700,8 +700,43 @@ class MainFrame(wx.Frame):
     
     def OnAddCurve(self, event):
         """Create a curved segment between two selected waypoints."""
-        wx.MessageBox("We are sorry, but this feature is not yet implemented.", 
-                     "Reverse Route", wx.OK | wx.ICON_EXCLAMATION)
+        selected_ids = list(self.mapCanvas.GetSelectedWaypoints())
+        if len(selected_ids) != 2:
+            return
+            
+        network = self._dataMngr.getRoadNetwork()
+        if not network:
+            return
+            
+        start_wp = network.get_waypoint(selected_ids[0])
+        end_wp = network.get_waypoint(selected_ids[1])
+        
+        if not start_wp or not end_wp:
+            return
+
+        # Callback for preview
+        def on_preview(points, connections):
+            self.mapCanvas.ShowPreviewCurve(points, connections)
+
+        dlg = AddCurveDialog(self, start_wp, end_wp, network, preview_callback=on_preview)
+        
+        if dlg.ShowModal() == wx.ID_OK:
+            points, direction_mode = dlg.GetCurveData()
+            
+            # The dialog returns points including start and end.
+            # create_curve expects intermediate points.
+            if len(points) >= 2:
+                intermediate = points[1:-1]
+                if self._dataMngr.create_curve(start_wp.id, end_wp.id, intermediate, direction_mode):
+                    self._updateMainTitle()
+                    self.mapCanvas.RefreshMapData()
+                    self.SetStatusText(_("Curve created with {0} intermediate points.").format(len(intermediate)))
+                else:
+                    wx.MessageBox(_("Failed to create curve."), _("Error"), wx.OK | wx.ICON_ERROR)
+        
+        # Cleanup preview
+        self.mapCanvas.ClearPreview()
+        dlg.Destroy()
 
     def OnAddMarker(self, event):
         """Add a marker to the selected waypoint."""
@@ -1100,8 +1135,10 @@ class MainFrame(wx.Frame):
     
     def OnUpdateUI_AddRouteCurve(self, event):
         """Update UI state of the Add Route Curve toolbar item."""
-        # For now, we have no curve support, so always disable
-        event.Enable(False)
+        infos = self.mapCanvas.GetSelectionInfo()
+        # Enable only if exactly 2 waypoints are selected
+        bEnable = (infos['total'] == 2) and (infos['waypoints'] == 2)
+        event.Enable(bEnable)
     
     def OnUpdateUI_AddMark(self, event):
         """Update UI state of the Add Marker toolbar item."""
