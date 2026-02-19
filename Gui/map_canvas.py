@@ -1540,6 +1540,25 @@ class MapCanvas(wx.Panel):
             chain.add(nxt)
             cur_from, cur_to = nxt
 
+        # Build a temporary reverse-lookup map for "Reverse" segments.
+        # Standard predecessors are in wp.incoming.
+        # Reverse predecessors (A->B where A is not in B.incoming) are NOT in incoming.
+        # We need to scan the network or at least relevant parts to find them.
+        # Since we don't know where they are, scanning the network once is the safest O(N) approach.
+        # Optimization: lazy build or only if needed?
+        # For simplicity and robustness, we build it. It's fast enough for 50k nodes.
+        reverse_incoming = {} # target_id -> list of source_ids (that are reverse-connected)
+        
+        # We only really need to search if we risk encountering a reverse segment.
+        # But to be safe, let's just do the scan.
+        for wp in network.waypoints.values():
+            for out_id in wp.outgoing:
+                # If this is a one-way connection A->B and B doesn't know A, it's a reverse segment A->B
+                # (or just a potential predecessor for B)
+                target_wp = network.get_waypoint(out_id)
+                if target_wp and wp.id not in target_wp.incoming:
+                    reverse_incoming.setdefault(out_id, []).append(wp.id)
+
         # Backward propagation: ... -> prev -> start_from -> ...
         cur_from, cur_to = start_from, start_to
         while True:
@@ -1547,9 +1566,16 @@ class MapCanvas(wx.Panel):
             if not from_wp:
                 break
 
-            # Keep only strict backward candidates (exclude immediate back edge).
+            # Candidates come from:
+            # 1. Regular incoming connections (in from_wp.incoming)
+            # 2. Reverse connections (in reverse_incoming[cur_from])
+            
+            raw_predecessors = list(from_wp.incoming)
+            if cur_from in reverse_incoming:
+                raw_predecessors.extend(reverse_incoming[cur_from])
+
             candidates = []
-            for prev_id in from_wp.incoming:
+            for prev_id in raw_predecessors:
                 if prev_id == cur_to:
                     continue
                 prev_route = (prev_id, cur_from)
