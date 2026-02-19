@@ -699,6 +699,55 @@ class DatasManager(object):
 
         return new_selection
 
+    def toggle_reverse_routes(self, route_list):
+        """
+        Toggle the "marche arriere" (reverse driving) state for a list of route segments.
+
+        For each segment (from_id -> to_id):
+          - If currently REGULAR  (from_wp.outgoing has to_id AND to_wp.incoming has from_id):
+              -> becomes REVERSE by removing from_id from to_wp.incoming.
+          - If currently REVERSE  (from_wp.outgoing has to_id AND to_wp.incoming does NOT have from_id):
+              -> becomes REGULAR again by adding from_id back to to_wp.incoming.
+          - If currently DUAL: left untouched (n/a for marche arriere).
+
+        Returns:
+            List of route tuples (from_id, to_id) that were actually modified.
+        """
+        if not self._roadNetwork:
+            return []
+
+        before = self._create_snapshot()
+        modified_routes = []
+
+        for from_id, to_id in route_list:
+            from_wp = self._roadNetwork.get_waypoint(from_id)
+            to_wp   = self._roadNetwork.get_waypoint(to_id)
+            if not from_wp or not to_wp:
+                continue
+            # Only act on segments where from_id->to_id exists as an outgoing link
+            if to_id not in from_wp.outgoing:
+                continue
+            # Skip dual segments
+            if self._roadNetwork.is_dual(from_id, to_id):
+                continue
+
+            if self._roadNetwork.is_regular(from_id, to_id):
+                # Regular -> Reverse (marche arriere): remove the incoming link
+                if from_id in to_wp.incoming:
+                    to_wp.incoming.remove(from_id)
+                modified_routes.append((from_id, to_id))
+            elif self._roadNetwork.is_reverse(from_id, to_id):
+                # Reverse -> Regular: restore the incoming link
+                if from_id not in to_wp.incoming:
+                    to_wp.incoming.append(from_id)
+                modified_routes.append((from_id, to_id))
+
+        if modified_routes:
+            self._record_undo_snapshot(before)
+            self._set_network_modified()
+
+        return modified_routes
+
     # -- Setters --
     def setProjectName(self, name):
         if self._projectName != name:

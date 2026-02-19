@@ -940,9 +940,36 @@ class MainFrame(wx.Frame):
                          _("Error"), wx.OK | wx.ICON_ERROR)
     
     def OnReverseRoute(self, event):
-        """Handle route reversal from ribbon button."""
-        wx.MessageBox("We are sorry, but this feature is not yet implemented.", 
-                     "Reverse Route", wx.OK | wx.ICON_EXCLAMATION)
+        """Toggle reverse driving (marche arrière) on the selected route segments."""
+        selected = self.mapCanvas.GetSelectedRoutes()
+        if not selected:
+            return
+
+        # Validate that the selection forms a single continuous chain
+        if not self._are_routes_continuous(selected):
+            wx.MessageBox(
+                _("La sélection contient plusieurs séries discontinues de segments.\n"
+                  "Le passage en marche arrière ne peut se faire que sur une série continue de segments."),
+                _("Marche arrière"),
+                wx.OK | wx.ICON_WARNING
+            )
+            return
+
+        modified = self._dataMngr.toggle_reverse_routes(list(selected))
+
+        if modified:
+            # Keep same selection, refresh display
+            self.mapCanvas.RefreshMapData()
+            self._updateMainTitle()
+            self.SetStatusText(
+                _("Marche arrière basculée sur {0} segment(s).").format(len(modified))
+            )
+        else:
+            wx.MessageBox(
+                _("Aucun segment régulier ou marche-arrière dans la sélection."),
+                _("Marche arrière"),
+                wx.OK | wx.ICON_INFORMATION
+            )
 
     def OnZoomIn(self, event):
         """Handle Zoom In."""
@@ -999,11 +1026,63 @@ class MainFrame(wx.Frame):
         bEnable = (infos['total'] > 0) and (infos['routes'] > 0)
         event.Enable(bEnable)
     
-    def OnUpdateUI_Reverse(self, event):  
+    def OnUpdateUI_Reverse(self, event):
         """Update UI state of the Reverse Route toolbar item."""
-        # For now, we have no reverse support, so always disable
-        event.Enable(False)
+        if not self._dataMngr.isOk():
+            event.Enable(False)
+            return
+        infos = self.mapCanvas.GetSelectionInfo()
+        # Need at least one route, no stray waypoints
+        if infos['routes'] == 0 or infos['waypoints'] > 0:
+            event.Enable(False)
+            return
+        selected = self.mapCanvas.GetSelectedRoutes()
+        # Check: only non-dual segments
+        network = self._dataMngr.getRoadNetwork()
+        if network:
+            for from_id, to_id in selected:
+                if network.is_dual(from_id, to_id):
+                    event.Enable(False)
+                    return
+        # Check continuity
+        event.Enable(self._are_routes_continuous(selected))
     
+    def _are_routes_continuous(self, routes):
+        """
+        Return True if and only if the set of route tuples forms a single
+        connected, non-branching chain (each interior node has exactly one
+        predecessor and one successor within the selection).
+        """
+        if not routes:
+            return False
+
+        # Build an undirected adjacency map on the set of selected edges
+        adjacency = {}  # node -> set of neighbours
+        for from_id, to_id in routes:
+            adjacency.setdefault(from_id, set()).add(to_id)
+            adjacency.setdefault(to_id, set()).add(from_id)
+
+        # 1) Connectivity check: BFS/DFS from any node
+        start = next(iter(adjacency))
+        visited = {start}
+        stack = [start]
+        while stack:
+            node = stack.pop()
+            for nbr in adjacency[node]:
+                if nbr not in visited:
+                    visited.add(nbr)
+                    stack.append(nbr)
+        if len(visited) != len(adjacency):
+            # More than one connected component → discontinuous
+            return False
+
+        # 2) Simple-chain check: no node has degree > 2
+        for node, neighbours in adjacency.items():
+            if len(neighbours) > 2:
+                return False
+
+        return True
+
     def OnUpdateUI_AddRouteLine(self, event):
         """Update UI state of the Add Route Segment toolbar item."""
         infos = self.mapCanvas.GetSelectionInfo()
