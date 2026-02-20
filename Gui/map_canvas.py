@@ -150,6 +150,57 @@ class MapCanvas(wx.Panel):
         if not add:
             self.ClearSelection()
         self._selected_routes.add(route_tuple)
+
+    def SelectWaypoint(self, wp_id, add=False):
+        """
+        Select a specific waypoint.
+        
+        Args:
+            wp_id: Waypoint ID to select.
+            add: If True, add to existing selection. If False, clear others.
+        """
+        if not add:
+            self.ClearSelection()
+        self._selected_waypoints.add(wp_id)
+        self._update_selection_status()
+        self.Refresh()
+
+    def ZoomToWaypoint(self, wp_id):
+        """
+        Zoom the view to center on a specific waypoint.
+        
+        Args:
+            wp_id: Waypoint ID to zoom to.
+        """
+        network = self._datasMngr.getRoadNetwork()
+        if not network:
+            return
+        wp = network.get_waypoint(wp_id)
+        if not wp:
+            return
+        if not self._mapBitmap:
+            return
+
+        # Set a comfortable zoom level
+        target_zoom = 5.0
+        target_zoom = max(self.ZOOM_MIN, min(self.ZOOM_MAX, target_zoom))
+        self._zoom = target_zoom
+
+        # Center the view on the waypoint
+        canvasW, canvasH = self.GetClientSize()
+        mapW = self._mapBitmap.GetWidth()
+        mapH = self._mapBitmap.GetHeight()
+
+        # World coords -> pixel coords on the map image
+        px = wp.x + (mapW / 2.0)
+        pz = wp.z + (mapH / 2.0)
+
+        # Pan so that (px, pz) maps to the center of the canvas
+        self._panX = (canvasW / 2.0) - px * self._zoom
+        self._panY = (canvasH / 2.0) - pz * self._zoom
+
+        self._clampPan()
+        self.Refresh()
         
     def ZoomIn(self):
         """Zoom in relative to center of view."""

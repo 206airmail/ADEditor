@@ -6,7 +6,7 @@ import shutil
 from Core import RoadNetwork, Waypoint, MapMarker, SettingsManager, AppVersion, DatasManager, FarmSimHelper
 from Graphx import mainImages, getToolbarBitmaps
 from Gui import MapCanvas
-from Dialogs import NewProjectDialog, AboutDialog, SettingsDialog, MarkerDialog, AddCurveDialog
+from Dialogs import NewProjectDialog, AboutDialog, SettingsDialog, MarkerDialog, AddCurveDialog, DialogCheckResults
 
 _ = wx.GetTranslation
 
@@ -38,6 +38,7 @@ class MainFrame(wx.Frame):
         self.ID_MARKER_DEL = wx.NewIdRef()
         self.ID_SAVE_TO_FS = wx.NewIdRef()
         self.ID_RESTORE_FS = wx.NewIdRef()
+        self.ID_CHECK_DATAS = wx.NewIdRef()
 
         self._CreateToolsAndMenuBars()
         
@@ -123,6 +124,8 @@ class MainFrame(wx.Frame):
         edit_menu.Append(wx.ID_REDO)
         edit_menu.AppendSeparator()
         edit_menu.Append(wx.ID_DELETE, helpString=_("Delete selected item(s)"))
+        edit_menu.AppendSeparator()
+        edit_menu.Append(self.ID_CHECK_DATAS, _("Check Datas"), helpString=_("Check the datas for problems"))
         menuBar.Append(edit_menu, wx.GetStockLabel(wx.ID_EDIT))
         # Help menu
         menu = wx.Menu()
@@ -199,6 +202,7 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnAddMarker, id=self.ID_MARKER_ADD)
         self.Bind(wx.EVT_MENU, self.OnEditMarker, id=self.ID_MARKER_EDIT)
         self.Bind(wx.EVT_MENU, self.OnDelMarker, id=self.ID_MARKER_DEL)
+        self.Bind(wx.EVT_MENU, self.OnCheckDatas, id=self.ID_CHECK_DATAS)
         # Update UI events
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_Save, id=wx.ID_SAVE)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_SaveAs, id=wx.ID_SAVEAS)
@@ -214,6 +218,7 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_AddMark, id=self.ID_MARKER_ADD)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_EditMark, id=self.ID_MARKER_EDIT)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_DelMark, id=self.ID_MARKER_DEL)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_CheckDatas, id=self.ID_CHECK_DATAS)
 
     def OnClose(self, event):
         nb = self._fileHistory.Count
@@ -367,9 +372,10 @@ class MainFrame(wx.Frame):
 
             validation_errors = self._validate_network_for_export(export_network)
             if validation_errors:
-                lines = "\n".join(f"- {err}" for err in validation_errors[:20])
-                if len(validation_errors) > 20:
-                    lines += _("\n- ... and {0} more issue(s)").format(len(validation_errors) - 20)
+                msgs = [msg for _, msg in validation_errors]
+                lines = "\n".join(f"- {m}" for m in msgs[:20])
+                if len(msgs) > 20:
+                    lines += _("\n- ... and {0} more issue(s)").format(len(msgs) - 20)
                 wx.MessageBox(
                     _("Export blocked: invalid network data detected.\n\n{0}").format(lines),
                     _("Export"), wx.OK | wx.ICON_ERROR
@@ -496,33 +502,36 @@ class MainFrame(wx.Frame):
             )
 
     def _validate_network_for_export(self, network):
+        """Validate network integrity.
+        Returns a list of (waypoint_id, message) tuples, or an empty list if valid.
+        waypoint_id may be None when no specific waypoint is associated."""
         errors = []
         if not network:
-            return [_("No network loaded.")]
+            return [(None, _("No network loaded."))]
 
         for wp_id, wp in network.waypoints.items():
             if wp.id != wp_id:
-                errors.append(_("Waypoint key/id mismatch for waypoint {0}.").format(wp_id))
+                errors.append((wp_id, _("Waypoint key/id mismatch for waypoint {0}.").format(wp_id)))
 
             for out_id in wp.outgoing:
                 target = network.get_waypoint(out_id)
                 if target is None:
-                    errors.append(_("Waypoint {0}: outgoing reference to missing waypoint {1}.").format(wp_id, out_id))
+                    errors.append((wp_id, _("Waypoint {0}: outgoing reference to missing waypoint {1}.").format(wp_id, out_id)))
                     continue
                 if wp_id not in target.incoming:
-                    errors.append(_("Waypoint {0}->{1}: missing reciprocal incoming reference.").format(wp_id, out_id))
+                    errors.append((wp_id, _("Waypoint {0}->{1}: missing reciprocal incoming reference.").format(wp_id, out_id)))
 
             for in_id in wp.incoming:
                 src = network.get_waypoint(in_id)
                 if src is None:
-                    errors.append(_("Waypoint {0}: incoming reference from missing waypoint {1}.").format(wp_id, in_id))
+                    errors.append((wp_id, _("Waypoint {0}: incoming reference from missing waypoint {1}.").format(wp_id, in_id)))
                     continue
                 if wp_id not in src.outgoing:
-                    errors.append(_("Waypoint {0}<-{1}: missing reciprocal outgoing reference.").format(wp_id, in_id))
+                    errors.append((wp_id, _("Waypoint {0}<-{1}: missing reciprocal outgoing reference.").format(wp_id, in_id)))
 
         for marker in network.markers:
             if network.get_waypoint(marker.waypoint_id) is None:
-                errors.append(_("Marker '{0}' points to missing waypoint {1}.").format(marker.name, marker.waypoint_id))
+                errors.append((marker.waypoint_id, _("Marker '{0}' points to missing waypoint {1}.").format(marker.name, marker.waypoint_id)))
 
         return errors
 
@@ -803,6 +812,35 @@ class MainFrame(wx.Frame):
             self._dataMngr.remove_marker(wp_id)
             self.mapCanvas.RefreshMapData()
             self._updateMainTitle()
+    
+    def OnCheckDatas(self, event):
+        """Check the datas for problems."""
+        if not self._dataMngr.isOk():
+            wx.MessageBox(_("No project loaded."), _("Check Data"), wx.OK | wx.ICON_INFORMATION)
+            return
+
+        network = self._dataMngr.getRoadNetwork()
+        validation_errors = self._validate_network_for_export(network)
+
+        if not validation_errors:
+            wp_count = len(network.waypoints) if network else 0
+            rt_count = self._count_routes(network)
+            mk_count = len(network.markers) if network else 0
+            wx.MessageBox(
+                _("No issue detected.\n\nWaypoints: {0}\nRoutes: {1}\nMarkers: {2}").format(
+                    wp_count, rt_count, mk_count),
+                _("Check Data"), wx.OK | wx.ICON_INFORMATION
+            )
+        else:
+            def on_select(wp_id):
+                if wp_id is not None:
+                    self.mapCanvas.ClearSelection()
+                    self.mapCanvas.SelectWaypoint(wp_id)
+                    self.mapCanvas.ZoomToWaypoint(wp_id)
+
+            dlg = DialogCheckResults(self, validation_errors, on_select)
+            dlg.ShowModal()
+            dlg.Destroy()
 
     def OnAboutClicked(self, event):
         """Handle the event when the about button is clicked."""
@@ -1156,3 +1194,7 @@ class MainFrame(wx.Frame):
         """Update UI state of the Del Marker toolbar item."""
         infos = self.mapCanvas.GetSelectionInfo()
         event.Enable(infos['markers'] > 0)
+    
+    def OnUpdateUI_CheckDatas(self, event):
+        """Update UI state of the Check Datas menu item."""
+        event.Enable(self._dataMngr.isOk())
