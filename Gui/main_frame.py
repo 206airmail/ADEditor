@@ -518,7 +518,8 @@ class MainFrame(wx.Frame):
                 if target is None:
                     errors.append((wp_id, _("Waypoint {0}: outgoing reference to missing waypoint {1}.").format(wp_id, out_id)))
                     continue
-                if wp_id not in target.incoming:
+                # Reverse routes intentionally lack the reciprocal incoming link
+                if wp_id not in target.incoming and not network.is_reverse(wp_id, out_id):
                     errors.append((wp_id, _("Waypoint {0}->{1}: missing reciprocal incoming reference.").format(wp_id, out_id)))
 
             for in_id in wp.incoming:

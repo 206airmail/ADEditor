@@ -673,8 +673,6 @@ class MapCanvas(wx.Panel):
                     # For reverse segments, invert the arrow to show
                     # the vehicle physically moves backward along the segment direction.
                     angle = math.atan2(sy2 - sy1, sx2 - sx1)
-                    if network.is_reverse(wp.id, out_id):
-                        angle += math.pi
                     arrow_len = 10
                     arrow_angle = math.pi / 6  # 30 degrees
                     
@@ -723,8 +721,6 @@ class MapCanvas(wx.Panel):
                     # Calculate direction angle
                     # For reverse segments, invert the arrow.
                     angle = math.atan2(sy2 - sy1, sx2 - sx1)
-                    if network.is_reverse(from_id, to_id):
-                        angle += math.pi
                     arrow_len = 12  # Slightly larger for selected
                     arrow_angle = math.pi / 6  # 30 degrees
                     
