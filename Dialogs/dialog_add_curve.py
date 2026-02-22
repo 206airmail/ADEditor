@@ -215,7 +215,9 @@ class AddCurveDialog(wx.Dialog):
 
     def _get_forward_tangent(self, wp, mode, p_start, p_end, is_start):
         """
-        Get normalized FORWARD vector (x, y, z) representing the flow direction at this point.
+        Get normalized FORWARD vector (x, y, z) for curve tangent.
+        Uses the actual segments connected to the waypoint.
+        Always points in the logical direction of the segment.
         """
         # Default: straight line P0 -> P3
         dx = p_end[0] - p_start[0]
@@ -226,13 +228,14 @@ class AddCurveDialog(wx.Dialog):
         if base_len > 0:
             default_dir = (dx/base_len, dy/base_len, dz/base_len)
         else:
-            default_dir = (1, 0, 0) # Arbitrary
+            default_dir = (1, 0, 0)
             
         if mode == 0: # None
             return default_dir
-            
-        # 1 = Align with Incoming (Prev -> WP)
-        # 2 = Align with Outgoing (WP -> Next)
+        
+        # Mode 1 = Align with Incoming segment (Prev -> WP)
+        # Mode 2 = Align with Outgoing segment (WP -> Next)
+        # Both always use the forward direction of the segment
         
         target_vec = None
         
@@ -241,16 +244,11 @@ class AddCurveDialog(wx.Dialog):
                 prev_id = wp.incoming[0]
                 prev_wp = self.network.get_waypoint(prev_id)
                 if prev_wp:
-                    # Flow is Prev -> WP.
-                    # User wants to align with Incoming *Link*.
-                    # Interpretation: Vector pointing BACK to where we came from?
-                    # Or Vector pointing FORWARD following the flow?
-                    # User request: "One option should be the inverse of the other".
-                    # Outgoing is usually Forward (WP->Next).
-                    # So Incoming should be Backward (WP->Prev).
-                    vx = prev_wp.x - wp.x
-                    vy = prev_wp.y - wp.y
-                    vz = prev_wp.z - wp.z
+                    # Incoming segment flows Prev -> WP
+                    # Forward direction: WP - Prev
+                    vx = wp.x - prev_wp.x
+                    vy = wp.y - prev_wp.y
+                    vz = wp.z - prev_wp.z
                     target_vec = (vx, vy, vz)
         
         elif mode == 2: # Outgoing
@@ -258,12 +256,12 @@ class AddCurveDialog(wx.Dialog):
                 next_id = wp.outgoing[0]
                 next_wp = self.network.get_waypoint(next_id)
                 if next_wp:
-                    # Flow is WP -> Next
+                    # Outgoing segment flows WP -> Next
+                    # Always forward direction: Next - WP
                     vx = next_wp.x - wp.x
                     vy = next_wp.y - wp.y
                     vz = next_wp.z - wp.z
                     target_vec = (vx, vy, vz)
-
                     
         if target_vec:
             vx, vy, vz = target_vec
