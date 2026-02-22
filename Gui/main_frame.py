@@ -737,16 +737,29 @@ class MainFrame(wx.Frame):
             # create_curve expects intermediate points.
             if len(points) >= 2:
                 intermediate = points[1:-1]
-                if self._dataMngr.create_curve(start_wp.id, end_wp.id, intermediate, direction_mode):
+                result = self._dataMngr.create_curve(start_wp.id, end_wp.id, intermediate, direction_mode)
+                if result['success']:
                     self._updateMainTitle()
                     self.mapCanvas.RefreshMapData()
                     self.SetStatusText(_("Curve created with {0} intermediate points.").format(len(intermediate)))
+                    
+                    # Clear original selection
+                    self.mapCanvas.ClearSelection()
+                    
+                    # Select newly created waypoints
+                    for wp_id in result['created_waypoints']:
+                        self.mapCanvas.SelectWaypoint(wp_id, add=True)
+                    
+                    # Select newly created routes
+                    for route in result['routes']:
+                        self.mapCanvas.SelectRoute(route, add=True)
                 else:
                     wx.MessageBox(_("Failed to create curve."), _("Error"), wx.OK | wx.ICON_ERROR)
         
         # Cleanup preview
         self.mapCanvas.ClearPreview()
         dlg.Destroy()
+
 
     def OnAddMarker(self, event):
         """Add a marker to the selected waypoint."""

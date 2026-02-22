@@ -537,9 +537,12 @@ class DatasManager(object):
         Create a curve of waypoints between start_id and end_id.
         intermediate_points: list of (x, y, z) tuples.
         direction_mode: 0=S->E, 1=E->S, 2=Dual, 3=Reverse (S->E)
+        
+        Returns:
+            dict with keys: 'success', 'created_waypoints' (list of ids), 'routes' (list of (from, to) tuples)
         """
         if not self._roadNetwork:
-            return False
+            return {'success': False, 'created_waypoints': [], 'routes': []}
             
         before = self._create_snapshot()
         
@@ -554,6 +557,9 @@ class DatasManager(object):
         # Full sequence of IDs
         sequence = [start_id] + created_ids + [end_id]
         
+        # Track created routes
+        created_routes = []
+        
         # Create connections
         for i in range(len(sequence) - 1):
             u = sequence[i]
@@ -561,11 +567,15 @@ class DatasManager(object):
             
             if direction_mode == 0: # S->E
                 self._roadNetwork.add_route(u, v)
+                created_routes.append((u, v))
             elif direction_mode == 1: # E->S
                 self._roadNetwork.add_route(v, u)
+                created_routes.append((v, u))
             elif direction_mode == 2: # Dual
                 self._roadNetwork.add_route(u, v)
                 self._roadNetwork.add_route(v, u)
+                created_routes.append((u, v))
+                created_routes.append((v, u))
             elif direction_mode == 3: # Reverse S->E
                 # Create Regular first
                 self._roadNetwork.add_route(u, v)
@@ -573,13 +583,18 @@ class DatasManager(object):
                 wp_v = self._roadNetwork.get_waypoint(v)
                 if wp_v and u in wp_v.incoming:
                     wp_v.incoming.remove(u)
+                created_routes.append((u, v))
 
         if created_ids or len(sequence) > 2:
             self._record_undo_snapshot(before)
             self._set_network_modified()
-            return True
+            return {
+                'success': True,
+                'created_waypoints': created_ids,
+                'routes': created_routes
+            }
             
-        return False
+        return {'success': False, 'created_waypoints': [], 'routes': []}
 
     
     def swap_selected_routes(self, route_list):
