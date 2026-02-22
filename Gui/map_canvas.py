@@ -1,3 +1,4 @@
+import math
 import wx
 from Core import DatasManager
 
@@ -39,6 +40,7 @@ class MapCanvas(wx.Panel):
         self._dragStartPos = None
         self._currentDragPos = None
         self._selected_waypoints = set()
+        self._selection_order = []  # Track order of waypoint selection
         self._selected_routes = set()  # Store selected routes as (from_id, to_id) tuples
         
         # Preview state (for tools like Add Curve)
@@ -130,6 +132,22 @@ class MapCanvas(wx.Panel):
         """Return the set of selected waypoint IDs."""
         return self._selected_waypoints.copy()
     
+    def GetSelectedWaypointsOrdered(self):
+        """Return selected waypoint IDs in order of selection."""
+        return self._selection_order.copy()
+    
+    def _add_to_selection(self, wp_id):
+        """Add a waypoint to selection, maintaining order."""
+        if wp_id not in self._selected_waypoints:
+            self._selection_order.append(wp_id)
+        self._selected_waypoints.add(wp_id)
+    
+    def _remove_from_selection(self, wp_id):
+        """Remove a waypoint from selection."""
+        self._selected_waypoints.discard(wp_id)
+        if wp_id in self._selection_order:
+            self._selection_order.remove(wp_id)
+    
     def GetSelectedRoutes(self):
         """Return the set of selected routes as (from_id, to_id) tuples."""
         return self._selected_routes.copy()
@@ -137,6 +155,7 @@ class MapCanvas(wx.Panel):
     def ClearSelection(self):
         """Clear all selected waypoints and routes."""
         self._selected_waypoints.clear()
+        self._selection_order.clear()
         self._selected_routes.clear()
         
     def SelectRoute(self, route_tuple, add=False):
@@ -161,7 +180,7 @@ class MapCanvas(wx.Panel):
         """
         if not add:
             self.ClearSelection()
-        self._selected_waypoints.add(wp_id)
+        self._add_to_selection(wp_id)
         self._update_selection_status()
         self.Refresh()
 
@@ -750,6 +769,34 @@ class MapCanvas(wx.Panel):
                         x1, y1 = screen_points[i]
                         x2, y2 = screen_points[j]
                         dc.DrawLine(x1, y1, x2, y2)
+                        
+                        # Draw arrow to show direction (from i to j)
+                        arrow_len = 12
+                        arrow_angle = math.radians(30)
+                        
+                        # Vector from start to end
+                        dx = x2 - x1
+                        dy = y2 - y1
+                        line_len = math.sqrt(dx*dx + dy*dy)
+                        
+                        if line_len > arrow_len:
+                            # Arrow midpoint
+                            mid_x = x1 + dx * 0.5
+                            mid_y = y1 + dy * 0.5
+                            
+                            # Angle of the line
+                            angle = math.atan2(dy, dx) if line_len > 0 else 0
+                            
+                            # Arrow head points
+                            ax1 = mid_x - arrow_len * math.cos(angle - arrow_angle)
+                            ay1 = mid_y - arrow_len * math.sin(angle - arrow_angle)
+                            ax2 = mid_x - arrow_len * math.cos(angle + arrow_angle)
+                            ay2 = mid_y - arrow_len * math.sin(angle + arrow_angle)
+                            
+                            # Draw arrow head
+                            dc.SetPen(wx.Pen(wx.Colour(255, 255, 0), 2))  # Yellow arrow
+                            dc.DrawLine(int(mid_x), int(mid_y), int(ax1), int(ay1))
+                            dc.DrawLine(int(mid_x), int(mid_y), int(ax2), int(ay2))
                 
                 # Draw nodes
                 dc.SetBrush(wx.Brush(wx.Colour(255, 255, 0)))
@@ -1007,7 +1054,7 @@ class MapCanvas(wx.Panel):
                         self._selected_routes.clear()
                     
                     for waypoint_id in path:
-                        self._selected_waypoints.add(waypoint_id)
+                        self._add_to_selection(waypoint_id)
                     
                     self._lastSelectedWaypoint = wp_id
                     self.Refresh()
@@ -1018,19 +1065,20 @@ class MapCanvas(wx.Panel):
             if not event.ControlDown():
                 # Clear selection and select only this waypoint
                 self._selected_waypoints.clear()
+                self._selection_order.clear()
                 self._selected_routes.clear()
-                self._selected_waypoints.add(wp_id)
+                self._add_to_selection(wp_id)
             else:
                 # Ctrl is held
                 if wp_id in self._selected_waypoints:
                     # Toggle off: remove from selection and don't drag
-                    self._selected_waypoints.remove(wp_id)
+                    self._remove_from_selection(wp_id)
                     self.Refresh()
                     event.Skip()
                     return
                 else:
                     # Add to selection
-                    self._selected_waypoints.add(wp_id)
+                    self._add_to_selection(wp_id)
             
             # Update last selected waypoint for Shift+click
             self._lastSelectedWaypoint = wp_id
@@ -1140,8 +1188,9 @@ class MapCanvas(wx.Panel):
                 
                 # Update selection to the new waypoint
                 self._selected_waypoints.clear()
+                self._selection_order.clear()
                 self._selected_routes.clear()
-                self._selected_waypoints.add(new_id)
+                self._add_to_selection(new_id)
                 
                 self.Refresh()
                 # Update UI (title, status)
@@ -1305,12 +1354,13 @@ class MapCanvas(wx.Panel):
                     if not event.ControlDown():
                         # Clear both selections if Ctrl not pressed
                         self._selected_waypoints.clear()
+                        self._selection_order.clear()
                         self._selected_routes.clear()
                     
                     if event.ControlDown() and wp_id in self._selected_waypoints:
-                        self._selected_waypoints.remove(wp_id)
+                        self._remove_from_selection(wp_id)
                     else:
-                        self._selected_waypoints.add(wp_id)
+                        self._add_to_selection(wp_id)
                 else:
                     # No waypoint hit, check for route
                     route = self._hit_test_route(currentPos)
@@ -1343,6 +1393,7 @@ class MapCanvas(wx.Panel):
                 # Handling Ctrl
                 if not event.ControlDown():
                     self._selected_waypoints.clear()
+                    self._selection_order.clear()
                     self._selected_routes.clear()  # Clear routes on rectangle selection
                     
                 # Convert screen rect to world coords
@@ -1357,7 +1408,7 @@ class MapCanvas(wx.Panel):
                 
                 for wp in network.waypoints.values():
                     if w_min_x <= wp.x <= w_max_x and w_min_z <= wp.z <= w_max_z:
-                        self._selected_waypoints.add(wp.id)
+                        self._add_to_selection(wp.id)
             
             self._isLeftDragging = False
             self._dragStartPos = None

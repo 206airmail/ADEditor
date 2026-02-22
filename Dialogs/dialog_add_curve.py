@@ -19,7 +19,7 @@ class AddCurveDialog(wx.Dialog):
         self._num_points = 5
         self._tangent_start_mode = 0  # 0=None, 1=In, 2=Out
         self._tangent_end_mode = 0    # 0=None, 1=In, 2=Out
-        self._direction_mode = 0      # 0=OneWay(S->E), 1=OneWay(E->S), 2=Dual, 3=Reverse
+        self._reverse_direction = False  # False=Start->End, True=End->Start
         
         self._init_ui()
         self._update_preview()
@@ -39,29 +39,22 @@ class AddCurveDialog(wx.Dialog):
         sb_tangency = wx.StaticBox(self, label=_("Tangency"))
         sizer_tangency = wx.StaticBoxSizer(sb_tangency, wx.VERTICAL)
         
-        # Start Tangency
+        # Start Tangency (First selected point)
         hbox_start = wx.BoxSizer(wx.HORIZONTAL)
-        hbox_start.Add(wx.StaticText(self, label=_("Start (from selected):")), 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 5)
+        self.label_start = wx.StaticText(self, label=_("First Selected Point (Start):"))
+        hbox_start.Add(self.label_start, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 5)
         
         start_choices = [_("None"), _("Align with Incoming"), _("Align with Outgoing")]
         self.choice_start = wx.Choice(self, choices=start_choices)
         self.choice_start.SetSelection(0)
-        
-        # Logic to enable/disable based on connections
-        has_incoming = len(self.start_wp.incoming) > 0
-        has_outgoing = len(self.start_wp.outgoing) > 0
-        
-        # If no incoming/outgoing, we can't align
-        # We can implement sophisticated logic here: disable specific items or reset selection
-        # For simplicity, if not available, selecting it will just behave like None or be ignored in calc
-        
         self.choice_start.Bind(wx.EVT_CHOICE, self._on_param_change)
         hbox_start.Add(self.choice_start, 1, wx.EXPAND)
         sizer_tangency.Add(hbox_start, 0, wx.ALL | wx.EXPAND, 5)
 
-        # End Tangency
+        # End Tangency (Second selected point)
         hbox_end = wx.BoxSizer(wx.HORIZONTAL)
-        hbox_end.Add(wx.StaticText(self, label=_("End (to selected):")), 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 5)
+        self.label_end = wx.StaticText(self, label=_("Second Selected Point (End):"))
+        hbox_end.Add(self.label_end, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 5)
         
         end_choices = [_("None"), _("Align with Incoming"), _("Align with Outgoing")]
         self.choice_end = wx.Choice(self, choices=end_choices)
@@ -72,17 +65,13 @@ class AddCurveDialog(wx.Dialog):
         
         main_sizer.Add(sizer_tangency, 0, wx.ALL | wx.EXPAND, 10)
         
-        # 3. Direction
-        directions = [
-            _("One Way (Start -> End)"), 
-            _("One Way (End -> Start)"),
-            _("Dual Way"),
-            _("Reverse (Start -> End)")
-        ]
-        self.radio_dir = wx.RadioBox(self, label=_("Route Direction"), choices=directions, majorDimension=1, style=wx.RA_SPECIFY_COLS)
-        self.radio_dir.SetSelection(0)
-        self.radio_dir.Bind(wx.EVT_RADIOBOX, self._on_param_change)
-        main_sizer.Add(self.radio_dir, 0, wx.ALL | wx.EXPAND, 10)
+        # 3. Direction checkbox
+        hbox_dir = wx.BoxSizer(wx.HORIZONTAL)
+        self.check_reverse = wx.CheckBox(self, label=_('Reverse Direction (End -> Start)'))
+        self.check_reverse.SetValue(False)
+        self.check_reverse.Bind(wx.EVT_CHECKBOX, self._on_param_change)
+        hbox_dir.Add(self.check_reverse, 0, wx.ALL, 5)
+        main_sizer.Add(hbox_dir, 0, wx.ALL | wx.EXPAND, 10)
         
         # Buttons
         btn_sizer = self.CreateButtonSizer(wx.OK | wx.CANCEL)
@@ -94,11 +83,36 @@ class AddCurveDialog(wx.Dialog):
 
     def _on_param_change(self, event):
         self._num_points = self.spin_points.GetValue()
-        self._tangent_start_mode = self.choice_start.GetSelection()
-        self._tangent_end_mode = self.choice_end.GetSelection()
-        self._direction_mode = self.radio_dir.GetSelection()
+        was_reverse = self._reverse_direction
+        self._reverse_direction = self.check_reverse.GetValue()
+        
+        # If reverse direction changed, swap the tangency dropdowns
+        if was_reverse != self._reverse_direction:
+            start_sel = self.choice_start.GetSelection()
+            end_sel = self.choice_end.GetSelection()
+            self.choice_start.SetSelection(end_sel)
+            self.choice_end.SetSelection(start_sel)
+            # Update the internal state after swapping
+            self._tangent_start_mode = self.choice_start.GetSelection()
+            self._tangent_end_mode = self.choice_end.GetSelection()
+            # Update labels to show current logical roles
+            self._update_labels()
+        else:
+            self._tangent_start_mode = self.choice_start.GetSelection()
+            self._tangent_end_mode = self.choice_end.GetSelection()
         
         self._update_preview()
+    
+    def _update_labels(self):
+        """Update tangency labels based on current direction."""
+        if self._reverse_direction:
+            # When reversed, second selected becomes start, first becomes end
+            self.label_start.SetLabel(_("Second Selected Point (Start):"))
+            self.label_end.SetLabel(_("First Selected Point (End):"))
+        else:
+            # Normal: first selected is start, second is end
+            self.label_start.SetLabel(_("First Selected Point (Start):"))
+            self.label_end.SetLabel(_("Second Selected Point (End):"))
         
     def _update_preview(self):
         """Calculate curve points and call callback."""
@@ -108,40 +122,44 @@ class AddCurveDialog(wx.Dialog):
         points = self._calculate_bezier_points()
         
         # Generate connections based on direction
+        # Points list is always in the correct order (from start to end)
         connections = []
         count = len(points)
         if count < 2:
             pass # Should be at least start and end
         
-        # 0=OneWay(S->E), 1=OneWay(E->S), 2=Dual, 3=Reverse
-        # Points list includes [Start, p1, p2, ... End]
-        
+        # Always draw connections in forward order since points are ordered correctly
         for i in range(count - 1):
             u, v = i, i + 1
-            if self._direction_mode == 0: # S->E
-                connections.append((u, v))
-            elif self._direction_mode == 1: # E->S
-                connections.append((v, u))
-            elif self._direction_mode == 2: # Dual
-                connections.append((u, v))
-                connections.append((v, u))
-            elif self._direction_mode == 3: # Reverse (Start -> End geometry, but reverse logic)
-                # Visualized as forward connection usually, or blue if fully implemented in preview
-                connections.append((u, v))
+            connections.append((u, v))
 
         self.preview_callback(points, connections)
 
     def GetCurveData(self):
-        """Return (points, direction_mode)."""
-        return self._calculate_bezier_points(), self._direction_mode
+        """Return (points, direction_mode). Direction can be 0 (Start -> End) or 1 (End -> Start)."""
+        direction_mode = 1 if self._reverse_direction else 0
+        return self._calculate_bezier_points(), direction_mode
 
     def _calculate_bezier_points(self):
         """
         Calculate cubic Bezier curve points.
         Returns list of (x, y, z) tuples including start and end.
+        When reverse_direction is True, start and end points are swapped.
         """
-        p0 = (self.start_wp.x, self.start_wp.y, self.start_wp.z)
-        p3 = (self.end_wp.x, self.end_wp.y, self.end_wp.z)
+        # Determine actual start and end based on reverse flag
+        if self._reverse_direction:
+            actual_start_wp = self.end_wp
+            actual_end_wp = self.start_wp
+            tangent_start_mode = self._tangent_end_mode
+            tangent_end_mode = self._tangent_start_mode
+        else:
+            actual_start_wp = self.start_wp
+            actual_end_wp = self.end_wp
+            tangent_start_mode = self._tangent_start_mode
+            tangent_end_mode = self._tangent_end_mode
+        
+        p0 = (actual_start_wp.x, actual_start_wp.y, actual_start_wp.z)
+        p3 = (actual_end_wp.x, actual_end_wp.y, actual_end_wp.z)
         
         # Distance between P0 and P3
         dx = p3[0] - p0[0]
@@ -153,8 +171,8 @@ class AddCurveDialog(wx.Dialog):
         ctrl_len = dist / 3.0
         
         # Determine forward tangent directions (normalized)
-        dir_start = self._get_forward_tangent(self.start_wp, self._tangent_start_mode, p0, p3, is_start=True)
-        dir_end   = self._get_forward_tangent(self.end_wp,   self._tangent_end_mode,   p0, p3, is_start=False)
+        dir_start = self._get_forward_tangent(actual_start_wp, tangent_start_mode, p0, p3, is_start=True)
+        dir_end   = self._get_forward_tangent(actual_end_wp,   tangent_end_mode,   p0, p3, is_start=False)
         
         # Calculate Control Points
         # P1 = P0 + dir_start * len

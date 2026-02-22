@@ -710,7 +710,7 @@ class MainFrame(wx.Frame):
     
     def OnAddCurve(self, event):
         """Create a curved segment between two selected waypoints."""
-        selected_ids = list(self.mapCanvas.GetSelectedWaypoints())
+        selected_ids = self.mapCanvas.GetSelectedWaypointsOrdered()
         if len(selected_ids) != 2:
             return
             
