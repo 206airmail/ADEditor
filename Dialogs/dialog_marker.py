@@ -45,3 +45,7 @@ class MarkerDialog(wx.Dialog):
     def GetValues(self):
         """Return the (name, group) tuple entered by the user."""
         return self.txt_name.GetValue(), self.cb_group.GetValue()
+    
+    def ShowModal(self):
+        self.txt_name.SetFocus()
+        return super().ShowModal()
