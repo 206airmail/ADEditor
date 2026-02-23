@@ -32,14 +32,18 @@ class ADEditorApp(wx.App):
         frm = MainFrame()
 
         self.hlpProvider = wx.HelpControllerHelpProvider()
-        wx.HelpProvider.Set(self.hlpProvider);
-        self.hlpProvider.SetHelpController(frm._hlpController);
-        sHelpFile = os.path.abspath(os.path.join("./langs",  f"Help-ADEditor-{sLngSHort}.zip"))
+        wx.HelpProvider.Set(self.hlpProvider)
+        self.hlpProvider.SetHelpController(frm._hlpController)
+
+        # Enable reading help from zip files
+        wx.FileSystem.AddHandler(wx.ArchiveFSHandler())
+
+        sHelpFile = os.path.join("./langs",  f"Help-ADEditor-{sLngSHort}.zip")
         if not os.path.isfile(sHelpFile):
-            sHelpFile = os.path.abspath(os.path.join("./langs",  f"Help-ADEditor-en.zip"))
-        #print(f"Help file = {sHelpFile}")
+            sHelpFile = os.path.join("./langs",  f"Help-ADEditor-en.zip")
+        
         if not frm._hlpController.Initialize(sHelpFile):
-            print(f"unable to initialize help with\n{sHelpFile}")
+            print(f"Warning: Unable to initialize help with {sHelpFile}")
 
         self.SetTopWindow(frm)
         frm.Show()
