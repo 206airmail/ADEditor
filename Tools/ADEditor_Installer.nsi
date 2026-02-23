@@ -10,8 +10,12 @@ SetCompressor /SOLID lzma
 !include "FileFunc.nsh"
 
 ; --- Configuration ---
+!searchparse /file "..\Core\version.py" 'self.Major = ' VER_MAJOR
+!searchparse /file "..\Core\version.py" 'self.Minor = ' VER_MINOR
+!searchparse /file "..\Core\version.py" 'self.Revision = ' VER_REVISION
+!define PRODUCT_VERSION "${VER_MAJOR}.${VER_MINOR}.${VER_REVISION}"
+
 !define PRODUCT_NAME "AutoDrive Editor"
-!define PRODUCT_VERSION "1.0.0"
 !define PRODUCT_PUBLISHER "Xav'"
 !define PRODUCT_DIR_REGKEY "Software\Xav\AutoDriveEditor"
 !define UNINSTALL_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\AutoDriveEditor"
@@ -61,6 +65,9 @@ Section "Install" id0
   ; Copy langs files
   SetOutPath "$INSTDIR\langs"
   File /r "..\build\ADEditor\langs\*.mo"
+  ; Copy help files
+  SetOutPath "$INSTDIR\langs"
+  File /r "..\build\ADEditor\langs\Help-ADEditor-*.zip"
   
   SetOutPath "$INSTDIR"
   ; Copy main executable

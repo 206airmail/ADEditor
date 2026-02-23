@@ -25,11 +25,19 @@ def BuildPackage():
         'packaging', 'pydoc_data',
         'setuptools', 'unittest', 'urllib'
         ]
-    myIncludes = [
-        ('./langs/fr/adeditor.mo', 'langs/fr/adeditor.mo'),
-        ('./langs/Help-ADEditor-en.zip', 'langs/Help-ADEditor-en.zip'),
-        ('./langs/Help-ADEditor-fr.zip', 'langs/Help-ADEditor-fr.zip')
-    ]
+    myIncludes = []
+    # Automatically add language files (.mo) and help archives (.zip) from the 'langs' directory
+    langs_dir = Path('langs')
+    if langs_dir.exists():
+        # Find all .mo files recursively
+        for mo_file in langs_dir.rglob('*.mo'):
+            rel_path = mo_file.as_posix()
+            myIncludes.append((rel_path, rel_path))
+        
+        # Find all Help-ADEditor-*.zip files in the langs root
+        for zip_file in langs_dir.glob('Help-ADEditor-*.zip'):
+            rel_path = zip_file.as_posix()
+            myIncludes.append((rel_path, rel_path))
 
     build_exe_options = {
         "build_exe": "build/ADEditor",
