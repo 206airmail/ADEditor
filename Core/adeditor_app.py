@@ -1,3 +1,4 @@
+import os
 import wx
 from Core import SettingsManager, AppVersion
 from Gui import MainFrame
@@ -20,13 +21,26 @@ class ADEditorApp(wx.App):
 
         # Define the interface language if needed
         bI18N = optMngr.ProhibitI18N is False
+        sLngSHort = 'en'
         if wx.GetKeyState(wx.WXK_SHIFT) is True:
             bI18N = not bI18N
 
         if bI18N is True:
             self.InitLanguage()
+            sLngSHort = self._locale.GetCanonicalName()[0:2]
 
         frm = MainFrame()
+
+        self.hlpProvider = wx.HelpControllerHelpProvider()
+        wx.HelpProvider.Set(self.hlpProvider);
+        self.hlpProvider.SetHelpController(frm._hlpController);
+        sHelpFile = os.path.abspath(os.path.join("./langs",  f"Help-ADEditor-{sLngSHort}.zip"))
+        if not os.path.isfile(sHelpFile):
+            sHelpFile = os.path.abspath(os.path.join("./langs",  f"Help-ADEditor-en.zip"))
+        #print(f"Help file = {sHelpFile}")
+        if not frm._hlpController.Initialize(sHelpFile):
+            print(f"unable to initialize help with\n{sHelpFile}")
+
         self.SetTopWindow(frm)
         frm.Show()
 

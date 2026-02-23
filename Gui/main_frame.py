@@ -1,4 +1,4 @@
-import wx
+import wx, wx.html
 import os
 from datetime import datetime
 from xml.etree import ElementTree as ETree
@@ -17,6 +17,8 @@ class MainFrame(wx.Frame):
 
         self._optMngr = SettingsManager()
         self._dataMngr = DatasManager()
+
+        self._hlpController = wx.html.HtmlHelpController()
 
         self._fileHistory = wx.FileHistory()
 
@@ -129,6 +131,8 @@ class MainFrame(wx.Frame):
         menuBar.Append(edit_menu, wx.GetStockLabel(wx.ID_EDIT))
         # Help menu
         menu = wx.Menu()
+        menu.Append(wx.ID_INDEX)
+        menu.AppendSeparator()
         menu.Append(wx.ID_ABOUT)
         menuBar.Append(menu, wx.GetStockLabel(wx.ID_HELP))
         
@@ -186,6 +190,7 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnRedoClicked, id=wx.ID_REDO)
         self.Bind(wx.EVT_MENU, self.OnPrefsClicked, id=wx.ID_PREFERENCES)
         self.Bind(wx.EVT_MENU, self.OnExitClicked, id=wx.ID_EXIT)
+        self.Bind(wx.EVT_MENU, self.OnHelpIndexClicked, id=wx.ID_INDEX)
         self.Bind(wx.EVT_MENU, self.OnAboutClicked, id=wx.ID_ABOUT)
         id1 = self._fileHistory.GetBaseId()
         id2 = id1 + self._fileHistory.GetMaxFiles()-1
@@ -856,6 +861,9 @@ class MainFrame(wx.Frame):
             dlg.ShowModal()
             dlg.Destroy()
 
+    def OnHelpIndexClicked(self, event):
+        self._hlpController.DisplayContents()
+    
     def OnAboutClicked(self, event):
         """Handle the event when the about button is clicked."""
         dlg = AboutDialog(self)

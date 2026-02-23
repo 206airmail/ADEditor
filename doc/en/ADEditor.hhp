@@ -1,0 +1,13 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=..\ADEditor_en.chm
+Contents file=ADEditor.hhc
+Default topic=index.html
+Display compile progress=No
+Index file=ADEditor.hhk
+Language=0x409 English (United States)
+Title=AutoDrive Editor Help
+
+[FILES]
+index.html
+about.html

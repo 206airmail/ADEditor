@@ -25,7 +25,11 @@ def BuildPackage():
         'packaging', 'pydoc_data',
         'setuptools', 'unittest', 'urllib'
         ]
-    myIncludes = [('./langs/fr/adeditor.mo', 'langs/fr/adeditor.mo')]
+    myIncludes = [
+        ('./langs/fr/adeditor.mo', 'langs/fr/adeditor.mo'),
+        ('./langs/Help-ADEditor-en.zip', 'langs/Help-ADEditor-en.zip'),
+        ('./langs/Help-ADEditor-fr.zip', 'langs/Help-ADEditor-fr.zip')
+    ]
 
     build_exe_options = {
         "build_exe": "build/ADEditor",

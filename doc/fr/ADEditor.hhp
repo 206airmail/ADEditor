@@ -1,0 +1,13 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=..\ADEditor_fr.chm
+Contents file=ADEditor.hhc
+Default topic=index.html
+Display compile progress=No
+Index file=ADEditor.hhk
+Language=0x40c French (France)
+Title=Aide AutoDrive Editor
+
+[FILES]
+index.html
+about.html
