@@ -29,6 +29,10 @@
 		<param name="Local" value="utilities.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Translation">
+		<param name="Local" value="translation.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="About">
 		<param name="Local" value="about.html">
 		</OBJECT>

@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+    <title>Translating the Application</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <h1>Translating the Application</h1>
+    <p>You can help translate AutoDrive Editor into a new language by following these simple steps.</p>
+
+    <h2>1. GUI Translation (Interface)</h2>
+    <ul>
+        <li><b>Create Folder</b>: Create a new 2-letter folder (the language code, e.g., <code>de</code>,
+            <code>es</code>, <code>it</code>) in the <code>langs/</code> directory.</li>
+        <li><b>Prepare PO File</b>: Copy the file <code>langs/adeditor.pot</code> into your new folder and rename it to
+            <code>adeditor.po</code>.</li>
+        <li><b>Translate</b>: Open this <code>adeditor.po</code> file with a translation software like <a
+                href="https://poedit.net/" target="_blank">Poedit</a>.</li>
+        <li><b>Edit Headers</b>: Fill in the project name, language, and your name in the catalog headers.</li>
+        <li><b>Save</b>: As you save in Poedit, it will automatically generate a <code>.mo</code> file which the
+            application uses.</li>
+    </ul>
+
+    <h2>2. Documentation Translation (Help)</h2>
+    <p>To provide a complete translation, you should also translate the help files:</p>
+    <ul>
+        <li><b>Create Doc Folder</b>: Create a new folder with the same 2-letter code in the <code>doc/</code>
+            directory.</li>
+        <li><b>Copy Base</b>: Copy all files from <code>doc/en/</code> into your new folder.</li>
+        <li><b>Translate</b>: Translate the content of the HTML files while keeping the original file names and
+            structure.</li>
+        <li><b>Update Project</b>: Ensure the <code>.hhc</code> and <code>.hhk</code> files are updated with the
+            translated titles.</li>
+    </ul>
+
+    <p>The build script <code>Tools/BuildHelpFiles.py</code> will automatically detect your new folder and create the
+        help archive for the application.</p>
+
+    <p class="back-link"><a href="index.html">Back to Home</a></p>
+</body>
+
+</html>

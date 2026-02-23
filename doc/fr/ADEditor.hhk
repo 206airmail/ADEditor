@@ -18,12 +18,16 @@
 		<param name="Local" value="navigation.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="Édition">
+		<param name="Name" value="&Eacute;dition">
 		<param name="Local" value="editing.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Outils">
 		<param name="Local" value="utilities.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Traduction">
+		<param name="Local" value="translation.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="&Agrave; propos">
