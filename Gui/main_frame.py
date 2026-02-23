@@ -892,6 +892,71 @@ class MainFrame(wx.Frame):
             wx.MessageBox(_("No items selected."), 
                          _("Delete"), wx.OK | wx.ICON_INFORMATION)
             return
+
+        # Route-only deletion flow in 2 steps:
+        # 1) Confirm and delete selected routes.
+        # 2) If route endpoints became orphaned, ask separately whether to delete them.
+        if selected_rt and not selected_wp:
+            route_count = len(selected_rt)
+            endpoint_ids = set()
+            for from_id, to_id in selected_rt:
+                endpoint_ids.add(from_id)
+                endpoint_ids.add(to_id)
+
+            dlg = wx.MessageDialog(
+                self,
+                _("Delete {0} route(s)?").format(route_count),
+                _("Confirm Deletion"),
+                wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION
+            )
+            if dlg.ShowModal() != wx.ID_YES:
+                dlg.Destroy()
+                return
+            dlg.Destroy()
+
+            removed_rt = self._dataMngr.remove_routes(list(selected_rt))
+            if removed_rt <= 0:
+                wx.MessageBox(_("Failed to delete selected items."),
+                             _("Error"), wx.OK | wx.ICON_ERROR)
+                return
+
+            # Refresh immediately after route deletion (step 1 complete).
+            self.mapCanvas.ClearSelection()
+            self.mapCanvas.RefreshMapData()
+            self._updateMainTitle()
+
+            # Step 2: detect endpoints that are now fully disconnected.
+            orphan_ids = set()
+            network = self._dataMngr.getRoadNetwork()
+            if network:
+                for wp_id in endpoint_ids:
+                    wp = network.get_waypoint(wp_id)
+                    if wp and not wp.incoming and not wp.outgoing:
+                        orphan_ids.add(wp_id)
+
+            removed_wp = 0
+            if orphan_ids:
+                orphan_dlg = wx.MessageDialog(
+                    self,
+                    _("{0} waypoint(s) became orphaned after route deletion.\n\nDo you want to delete them?")
+                        .format(len(orphan_ids)),
+                    _("Delete Orphan Waypoints"),
+                    wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION
+                )
+                if orphan_dlg.ShowModal() == wx.ID_YES:
+                    removed_wp = self._dataMngr.remove_waypoints(list(orphan_ids))
+                    if removed_wp > 0:
+                        self.mapCanvas.ClearSelection()
+                        self.mapCanvas.RefreshMapData()
+                        self._updateMainTitle()
+                orphan_dlg.Destroy()
+
+            result_parts = [_("{0} route(s)").format(removed_rt)]
+            if removed_wp > 0:
+                result_parts.append(_("{0} waypoint(s)").format(removed_wp))
+            wx.MessageBox(_("Successfully deleted {0}.").format(", ".join(result_parts)),
+                         _("Delete"), wx.OK | wx.ICON_INFORMATION)
+            return
         
         # Check if only routes are selected (no waypoints)
         intermediate_wp_to_delete = None
