@@ -13,6 +13,22 @@
 		<param name="Local" value="index.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Gestion de Projet">
+		<param name="Local" value="project.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Navigation">
+		<param name="Local" value="navigation.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Édition">
+		<param name="Local" value="editing.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Outils">
+		<param name="Local" value="utilities.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="&Agrave; propos">
 		<param name="Local" value="about.html">
 		</OBJECT>
