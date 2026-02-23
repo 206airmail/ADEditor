@@ -207,7 +207,7 @@ class DatasManager(object):
                     zf.write(self._adConfigPath, "AutoDrive_config.xml")
                 
                 # If data has been modified, also save the modified version
-                if self._hasModifiedData and self._roadNetwork:
+                if self._hasModifiedData and self._roadNetwork is not None:
                     from .autodrive_parser import save_autodrive_xml
                     import tempfile
                     # Save to temporary file first
@@ -399,7 +399,7 @@ class DatasManager(object):
         Remove a list of waypoints from the network.
         returns: The count of removed waypoints.
         """
-        if not self._roadNetwork:
+        if self._roadNetwork is None:
             return 0
 
         before = self._create_snapshot()
@@ -420,7 +420,7 @@ class DatasManager(object):
         Each route is a tuple (from_id, to_id).
         Returns: The count of removed routes.
         """
-        if not self._roadNetwork:
+        if self._roadNetwork is None:
             return 0
 
         before = self._create_snapshot()
@@ -470,7 +470,7 @@ class DatasManager(object):
         Create a new waypoint at the given coordinates.
         Returns: The ID of the new waypoint, or None if failed.
         """
-        if not self._roadNetwork:
+        if self._roadNetwork is None:
             return None
 
         before = self._create_snapshot()
@@ -490,7 +490,7 @@ class DatasManager(object):
 
     def add_marker(self, wp_id, name, group):
         """Add a new marker to the given waypoint."""
-        if not self._roadNetwork:
+        if self._roadNetwork is None:
             return False
 
         before = self._create_snapshot()
@@ -507,7 +507,7 @@ class DatasManager(object):
 
     def remove_marker(self, wp_id):
         """Remove a marker from the given waypoint."""
-        if not self._roadNetwork:
+        if self._roadNetwork is None:
             return False
 
         before = self._create_snapshot()
@@ -522,7 +522,7 @@ class DatasManager(object):
         Add a route between two waypoints.
         Returns: True if the route was created, False otherwise.
         """
-        if not self._roadNetwork:
+        if self._roadNetwork is None:
             return False
 
         before = self._create_snapshot()
@@ -541,7 +541,7 @@ class DatasManager(object):
         Returns:
             dict with keys: 'success', 'created_waypoints' (list of ids), 'routes' (list of (from, to) tuples)
         """
-        if not self._roadNetwork:
+        if self._roadNetwork is None:
             return {'success': False, 'created_waypoints': [], 'routes': []}
             
         before = self._create_snapshot()
@@ -609,7 +609,7 @@ class DatasManager(object):
         Returns:
             List of new route tuples (from_id, to_id) that are valid after the swap.
         """
-        if not self._roadNetwork:
+        if self._roadNetwork is None:
             return []
 
         before = self._create_snapshot()
@@ -778,7 +778,7 @@ class DatasManager(object):
         Returns:
             List of route tuples (from_id, to_id) that were actually modified.
         """
-        if not self._roadNetwork:
+        if self._roadNetwork is None:
             return []
 
         before = self._create_snapshot()
