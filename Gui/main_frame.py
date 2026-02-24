@@ -827,7 +827,7 @@ class MainFrame(wx.Frame):
         wp_id = selected[0]
         
         if wx.MessageBox(_("Are you sure you want to delete this marker?"), 
-                        _("Confirm Delete"), wx.YES_NO | wx.ICON_QUESTION) == wx.YES:
+                        _("Confirm Deletion"), wx.YES_NO | wx.ICON_QUESTION) == wx.YES:
             self._dataMngr.remove_marker(wp_id)
             self.mapCanvas.RefreshMapData()
             self._updateMainTitle()
@@ -907,7 +907,7 @@ class MainFrame(wx.Frame):
                 self,
                 _("Delete {0} route(s)?").format(route_count),
                 _("Confirm Deletion"),
-                wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION
+                wx.YES_NO | wx.ICON_QUESTION
             )
             if dlg.ShowModal() != wx.ID_YES:
                 dlg.Destroy()
@@ -1031,7 +1031,7 @@ class MainFrame(wx.Frame):
         msg = _("Delete {0}?").format(", ".join(parts))
         
         dlg = wx.MessageDialog(self, msg, _("Confirm Deletion"), 
-                               wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
+                               wx.YES_NO | wx.ICON_QUESTION)
         
         if dlg.ShowModal() == wx.ID_YES:
             removed_wp = 0

@@ -35,6 +35,7 @@ Like the original Java version, this application does not have yet any license a
   * Option to make this selection persistent between sessions or not
 - **Check box**: "*Do not show this dialog again*" on the "*delete items*" confirmation dialog
   * Option for restoring this (disabled dialogs ?)
+- **Default button**: Option to let the user choose witch button is the default when confirming a deletion
 - **Background image**: used when no project is loaded
 
 ### Planned Features
@@ -62,6 +63,7 @@ Like the original Java version, this application does not have yet any license a
 - **Enhanced Validation**: Added interactive "Check Data" dialog with "Jump to Error" functionality
 - **FS25 Reverse Mode Support**: Full implementation of reverse-driving segments (marche arrière) aligned with game data conventions
 - **Bug Fixes**: Numerous fixes for route direction, validation logic, and file handling
+- **Portable 7-Zip package**: A "*ready to use*" 7-Zip package witch stores its settings in its running folder
 
 ### Version 1.0.0
 

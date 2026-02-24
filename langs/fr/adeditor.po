@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ADEditor software\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-23 20:47+0100\n"
-"PO-Revision-Date: 2026-02-23 20:48+0100\n"
+"POT-Creation-Date: 2026-02-24 20:13+0100\n"
+"PO-Revision-Date: 2026-02-24 20:14+0100\n"
 "Last-Translator: Xaviou <x.psoud@gmail.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -363,7 +363,7 @@ msgstr "Vérifier les données"
 
 #: G:\Dev\_Python\ADEditor\Gui\main_frame.py:130
 msgid "Check the datas for problems"
-msgstr "Vérifiez les données pour détecter les problèmes."
+msgstr "Vérifiez les problèmes de données"
 
 #: G:\Dev\_Python\ADEditor\Gui\main_frame.py:151
 msgid "Create a new project"
@@ -739,7 +739,9 @@ msgid "Are you sure you want to delete this marker?"
 msgstr "Êtes-vous sûr de vouloir supprimer ce marqueur ?"
 
 #: G:\Dev\_Python\ADEditor\Gui\main_frame.py:830
-msgid "Confirm Delete"
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:909
+#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:1033
+msgid "Confirm Deletion"
 msgstr "Confirmer la suppression"
 
 #: G:\Dev\_Python\ADEditor\Gui\main_frame.py:849
@@ -765,11 +767,6 @@ msgstr "Aucun élément sélectionné."
 #, python-brace-format
 msgid "Delete {0} route(s)?"
 msgstr "Supprimer {0} itinéraire(s) ?"
-
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:909
-#: G:\Dev\_Python\ADEditor\Gui\main_frame.py:1033
-msgid "Confirm Deletion"
-msgstr "Confirmer la suppression"
 
 #: G:\Dev\_Python\ADEditor\Gui\main_frame.py:919
 #: G:\Dev\_Python\ADEditor\Gui\main_frame.py:1069
