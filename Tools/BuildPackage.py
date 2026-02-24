@@ -66,6 +66,12 @@ def BuildPackage():
                 copyright = appVers.getCopyright(),
                 target_name = f'{appVers.getAppName()}.exe'
                 )])
+    
+    # Create the "architecture" file in the output folder
+    with open(os.path.join(build_exe_options['build_exe'], "architecture"), "w") as f:
+        f.write(f"ARCHITECTURE = {archi}\n")
+        f.write(f"DESCRIPTION = {appVers.getAppDescription()}\n")
+        f.write(f"COPYRIGHT = {appVers.getCopyright()}\n")
 
     # Try to find 7zip command line executable
     # First, search thru the PATH

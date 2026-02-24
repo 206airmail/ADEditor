@@ -1,24 +1,42 @@
-; AutoDrive Editor NSIS Installer Script
+﻿; AutoDrive Editor NSIS Installer Script
 
 Unicode true
 ;SetCompress off
 SetCompressor /SOLID lzma
-!define ARCHI "64"
-!define ARCHI_LABEL "x64"
 
 !include "MUI2.nsh"
-!include "FileFunc.nsh"
+!include "x64.nsh"
+
+; Get the system architecture and set corresponding defines
+!searchparse /file "..\build\ADEditor\architecture" 'ARCHITECTURE = ' ARCHI
+!if "${ARCHI}" == "64"
+  !define ARCHI_LABEL "x64"
+!else
+  !define ARCHI_LABEL "i386"
+!endif
 
 ; --- Configuration ---
 !searchparse /file "..\Core\version.py" 'self.Major = ' VER_MAJOR
 !searchparse /file "..\Core\version.py" 'self.Minor = ' VER_MINOR
 !searchparse /file "..\Core\version.py" 'self.Revision = ' VER_REVISION
+!searchparse /file "..\Core\version.py" 'self.Build = ' VER_BUILD
 !define PRODUCT_VERSION "${VER_MAJOR}.${VER_MINOR}.${VER_REVISION}"
+
+!searchparse /file "..\build\ADEditor\architecture" 'DESCRIPTION = ' APP_DESCRIPTION
+!searchparse /file "..\build\ADEditor\architecture" 'COPYRIGHT = ' APP_COPYRIGHT
 
 !define PRODUCT_NAME "AutoDrive Editor"
 !define PRODUCT_PUBLISHER "Xav'"
 !define PRODUCT_DIR_REGKEY "Software\Xav\AutoDriveEditor"
 !define UNINSTALL_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\AutoDriveEditor"
+
+VIProductVersion "${PRODUCT_VERSION}.${VER_BUILD}"
+VIAddVersionKey "ProductVersion" "${PRODUCT_VERSION}"
+VIAddVersionKey "ProductName" "${PRODUCT_NAME}"
+VIAddVersionKey "CompanyName" "${PRODUCT_PUBLISHER}"
+VIAddVersionKey "FileVersion" "${PRODUCT_VERSION}"
+VIAddVersionKey "FileDescription" "${APP_DESCRIPTION}"
+VIAddVersionKey "LegalCopyright" "${APP_COPYRIGHT}"
 
 ;--------------------------------
 Name "${PRODUCT_NAME}"
@@ -56,17 +74,31 @@ RequestExecutionLevel admin
 ; Language Support
 !insertmacro MUI_LANGUAGE "English"
 !insertmacro MUI_LANGUAGE "French"
+LangString WarnX64 ${LANG_ENGLISH} "This installer requires a 64-bit version of Windows."
+LangString WarnX64 ${LANG_FRENCH} "Cet installateur nécessite une version 64-bit de Windows."
+
+Function .onInit
+  !if "${ARCHI}" == "64"
+    ${IfNot} ${RunningX64}
+      MessageBox MB_ICONSTOP $(WarnX64)
+      Abort
+    ${EndIf}
+  !endif
+FunctionEnd
 
 ; --- Sections ---
 Section "Install" id0
+  !if "${ARCHI}" == "64"
+    SetRegView 64
+  !else
+    SetRegView 32
+  !endif
     ; Copy lib folder and all its contents
   SetOutPath "$INSTDIR\lib"
   File /r "..\build\ADEditor\lib\*.*"
-  ; Copy langs files
+  ; Copy langs and help files
   SetOutPath "$INSTDIR\langs"
   File /r "..\build\ADEditor\langs\*.mo"
-  ; Copy help files
-  SetOutPath "$INSTDIR\langs"
   File /r "..\build\ADEditor\langs\Help-ADEditor-*.zip"
   
   SetOutPath "$INSTDIR"
@@ -101,6 +133,11 @@ SectionEnd
 
 ; --- Uninstaller Section ---
 Section "Uninstall"
+  !if "${ARCHI}" == "64"
+    SetRegView 64
+  !else
+    SetRegView 32
+  !endif
   ; Remove shortcuts
   Delete "$DESKTOP\${PRODUCT_NAME}.lnk"
   RMDir /r "$SMPROGRAMS\${PRODUCT_NAME}"
@@ -121,11 +158,3 @@ Section "Uninstall"
   DeleteRegKey HKLM "${PRODUCT_DIR_REGKEY}"
 
 SectionEnd
-
-; --- Component Description ---
-;!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-;  !insertmacro MUI_DESCRIPTION_TEXT ${SecApp} $(DESC_SecApp)
-;  !insertmacro MUI_DESCRIPTION_TEXT ${SecLang} $(DESC_SecLang)
-;  !insertmacro MUI_DESCRIPTION_TEXT ${SecDesktop} $(DESC_SecDesktop)
-;  !insertmacro MUI_DESCRIPTION_TEXT ${SecMenu} $(DESC_SecMenu)
-;!insertmacro MUI_FUNCTION_DESCRIPTION_END
