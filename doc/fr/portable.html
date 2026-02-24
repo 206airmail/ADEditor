@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+    <title>Mode Portable</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <h1>Mode Portable</h1>
+    <p>AutoDrive Editor peut être utilisé en mode "portable", ce qui signifie qu'il stocke tous ses réglages et
+        configurations dans son propre dossier plutôt que dans le dossier utilisateur du système.</p>
+
+    <h2>Activation du Mode Portable</h2>
+    <p>Le mode portable est automatiquement activé par la présence d'un fichier nommé <code>settings.xml</code> situé
+        dans le même dossier que l'exécutable <code>ADEditor.exe</code>.</p>
+
+    <p>Si ce fichier est absent, l'application utilisera le stockage standard du système (généralement dans
+        <code>%APPDATA%</code> sur Windows).
+    </p>
+
+    <blockquote>
+        [!IMPORTANT]
+        Il est impératif de laisser le fichier <code>settings.xml</code> dans le dossier de l'exécutable. Si vous le
+        supprimez ou le déplacez, l'application basculera en mode normal et créera de nouveaux réglages sur l'ordinateur
+        hôte.
+    </blockquote>
+
+    <h2>Contenu du fichier settings.xml</h2>
+    <p>Pour créer manuellement un mode portable, vous pouvez créer un fichier texte nommé <code>settings.xml</code> avec
+        le contenu suivant :</p>
+    <pre>&lt;?xml version='1.0' encoding='UTF-8'?&gt;<br>&lt;Settings-file Version='1.0'&gt;<br>&lt;/Settings-file&gt;</pre>
+
+    <p class="back-link"><a href="index.html">Retour à l'accueil</a></p>
+</body>
+
+</html>
