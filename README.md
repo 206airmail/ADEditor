@@ -13,8 +13,12 @@ AutoDrive Editor is a complete rewrite of the original Java-based AutoDrive Cour
 - **Heightmap Integration**: Automatic altitude calculation from heightmap data
 - **Project Management**: Save/load projects with all map data included
 - **Non-Destructive Editing**: Original savegame files remain untouched until explicit export
-- **Zoom & Pan**: Smooth navigation with mouse wheel zoom and drag-to-pan
-- **Route Validation**: Automatic detection of invalid connections and network issues
+- **Undo/Redo System**: Full action history support for all editing operations
+- **Curve Creation Tool**: Advanced Bezier curve generation with tangency control for smooth turns
+- **Backward Driving**: Native support for FS25 reverse-driving segments with correct data convention
+- **Navigation tools**: Smooth zoom and pan controls with mouse wheel support
+- **Enhanced Validation**: Automatic detection of invalid connections and network issues with an interactive "Check Data" dialog
+- **Portable package**: A "*ready to use*" 7-Zip package witch stores its settings in its running folder
 
 ## License
 
@@ -27,21 +31,17 @@ Like the original Java version, this application does not have yet any license a
 - **Original Editor**: Java-based AutoDrive Course Editor as reference [GitHub](https://github.com/KillBait/AutoDrive_Course_Editor)
 
 ## To do
-- **Help file**: Final User and translators manual
 - **Check tool** for propagation mode when double-clic on a route segment
   * Option to make this selection persistent between sessions or not
-- **Check box": do not show this dialog again on the "delete items" confirmation dialog
+- **Check box**: "*Do not show this dialog again*" on the "*delete items*" confirmation dialog
   * Option for restoring this (disabled dialogs ?)
 - **Background image**: used when no project is loaded
-- **Portable package**: a "ready to use" 7z package witch stores its settings in its running folder
 
 ### Planned Features
 
-- **Backward routes**: Integrating backward segments ability
-- **Connecting segments**: Creating a *curved* path (multi-waypoints) between 2 segments with start and end tangency
 - **Waypoints alignment**
 - **Traffic Data Integration**: Import existing road network from map to create routes quickly
-- **Magnifying glass system** Facilitating selection when several items are located close to others
+- **Magnifying glass system**: Facilitating selection when several items are located close to others
 - **Advanced Route Tools**:
   - Auto-connect waypoints along roads
   - Bulk waypoint operations (move, delete, flag change)
@@ -56,6 +56,13 @@ Like the original Java version, this application does not have yet any license a
 
 ## Changelog
 
+### Version 1.1.0
+
+- **Curve Creation Tool**: New utility for creating smooth Bezier curves with adjustable tangency
+- **Enhanced Validation**: Added interactive "Check Data" dialog with "Jump to Error" functionality
+- **FS25 Reverse Mode Support**: Full implementation of reverse-driving segments (marche arrière) aligned with game data conventions
+- **Bug Fixes**: Numerous fixes for route direction, validation logic, and file handling
+
 ### Version 1.0.0
 
 - **Visual Route Editor**: Display and edit AutoDrive routes directly on the map overview
@@ -67,8 +74,8 @@ Like the original Java version, this application does not have yet any license a
 - **Route validation**: Automatic detection of invalid connections and network issues
 - **Marker management**: Create and edit route markers
 - **Settings persistence**: User preferences and recent files management
-- **Multilingual support**: French and English interface support but can be easily translated into other languages
-- **Complete core architecture**: XML parsing, data management, and network processing
+- **Multilingual support**: French and English interface support
+- **Undo/Redo System**: Full action history support across the application
 
 ---
 

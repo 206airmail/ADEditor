@@ -100,3 +100,21 @@ def BuildPackage():
                         # arcname permet de garder la structure relative sans le dossier parent
                         zipf.write(file_path, arcname=file_path.relative_to(source_dir))
     
+    # Now, prepare the package for the "portable" version by creating a minimal settings file
+    with open(source_dir / 'settings.xml', 'w') as f:
+        f.write("<?xml version='1.0' encoding='UTF-8'?><Settings-file Version='1.0'></Settings-file>")
+    
+    archName = sName +"_Python-" + pyVersion + '_Win' + archi + '_Portable' + ('.7z' if sevenZip is not None else '.zip')
+    print(f"Creating archive {archName} from {source_dir}")
+    if sevenZip:
+        subprocess.run(
+                [sevenZip, "a" ,"-t7z", '-mx9', '../' + archName, "."],
+                cwd=source_dir,
+                check=True
+            )
+    else:
+        with zipfile.ZipFile('build/' + archName, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                for file_path in source_dir.rglob('*'):
+                    if file_path.is_file():
+                        # arcname permet de garder la structure relative sans le dossier parent
+                        zipf.write(file_path, arcname=file_path.relative_to(source_dir))
