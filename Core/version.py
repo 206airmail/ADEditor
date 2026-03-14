@@ -5,9 +5,9 @@ _ = wx.GetTranslation
 class AppVersion():
     def __init__(self):
         self.Major = 1
-        self.Minor = 0
+        self.Minor = 1
         self.Revision = 0
-        self.Build = 60213
+        self.Build = 60315
 
     def getVersion(self, full=False):
         sVers = str(self.Major) + "." + str(self.Minor) + '.' + str(self.Revision)
