@@ -64,6 +64,10 @@ class MapCanvas(wx.Panel):
         self._lastSelectedWaypoint = None  # For Shift+click path selection
         self._lastSelectedRoute = None  # For Shift+click route path selection
         
+        # Hover state
+        self._hovered_waypoint = None  # wp_id currently under the cursor
+        self._hovered_route = None     # (from_id, to_id) currently under the cursor
+        
         # Setup
         self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
         self.SetBackgroundColour(wx.Colour(40, 40, 45))  # Dark background
@@ -432,6 +436,16 @@ class MapCanvas(wx.Panel):
             self._currentDragPos = currentPos
             self.Refresh()
         
+        # --- Hover detection (only when not dragging) ---
+        if not self._isRightDragging and not self._isLeftDragging and not self._isShiftLeftDragging:
+            new_hovered_wp = self._hit_test(currentPos)
+            new_hovered_route = None if new_hovered_wp is not None else self._hit_test_route(currentPos)
+            
+            if new_hovered_wp != self._hovered_waypoint or new_hovered_route != self._hovered_route:
+                self._hovered_waypoint = new_hovered_wp
+                self._hovered_route = new_hovered_route
+                self.Refresh()
+        
         if not self._isRightDragging or self._lastMousePos is None:
             event.Skip()
             return
@@ -631,13 +645,18 @@ class MapCanvas(wx.Panel):
         COLOR_REVERSE = wx.Colour(135, 206, 235)    # Sky Blue - reverse
         COLOR_WAYPOINT = wx.Colour(255, 255, 0)     # Yellow - waypoint dot
         COLOR_SELECTED = wx.Colour(255, 0, 0)       # Red - selected
+        # Hover colors (slightly brighter/lighter variants)
+        COLOR_HOVER_REGULAR = wx.Colour(120, 255, 120)   # Light green
+        COLOR_HOVER_DUAL = wx.Colour(80, 80, 220)        # Brighter blue
+        COLOR_HOVER_REVERSE = wx.Colour(200, 235, 255)   # Lighter sky blue
+        COLOR_HOVER_WAYPOINT = wx.Colour(255, 140, 0)    # Vivid orange
+        # Cross-hover: hovered-waypoint → connected segments, hovered-segment → endpoint waypoints
+        COLOR_HOVER_ROUTE_FROM_WP  = wx.Colour(255, 80, 220)    # Magenta - segment lit by hovered waypoint
+        COLOR_HOVER_WP_FROM_ROUTE  = wx.Colour(0, 220, 220)     # Cyan   - waypoint lit by hovered segment
         
         # Map coordinate system: FS world coords -> image pixel coords -> screen coords
         # Standard FS25 maps are 2048x2048 image representing the game world
         # World coords: typically -1024 to +1024 or 0 to 2048 depending on map
-
-        
-        # Get visible screen bounds for culling
         
         # Get visible screen bounds for culling
         canvasW, canvasH = self.GetClientSize()
@@ -666,18 +685,49 @@ class MapCanvas(wx.Panel):
                     continue
                 
                 # Determine connection type and color
+                # For hover, also match the reverse direction for dual (bidirectional) routes
+                is_hovered_route = (
+                    self._hovered_route is not None and
+                    (self._hovered_route == (wp.id, out_id) or
+                     self._hovered_route == (out_id, wp.id))
+                )
+                # A segment is "lit" by the hovered waypoint if one of its endpoints is hovered
+                # but the segment itself is not the direct hovered one.
+                is_lit_by_hovered_wp = (
+                    not is_hovered_route and
+                    self._hovered_waypoint is not None and
+                    (wp.id == self._hovered_waypoint or out_id == self._hovered_waypoint)
+                )
                 if network.is_dual(wp.id, out_id):
                     # Skip if already drawn from the other direction
                     pair = (min(wp.id, out_id), max(wp.id, out_id))
                     if pair in drawn_dual:
                         continue
                     drawn_dual.add(pair)
-                    dc.SetPen(wx.Pen(COLOR_DUAL, lineWidth))
+                    if is_hovered_route:
+                        color, width = COLOR_HOVER_DUAL, lineWidth + 1
+                    elif is_lit_by_hovered_wp:
+                        color, width = COLOR_HOVER_ROUTE_FROM_WP, lineWidth + 1
+                    else:
+                        color, width = COLOR_DUAL, lineWidth
+                    dc.SetPen(wx.Pen(color, width))
                 elif network.is_reverse(wp.id, out_id):
-                    dc.SetPen(wx.Pen(COLOR_REVERSE, lineWidth))
+                    if is_hovered_route:
+                        color, width = COLOR_HOVER_REVERSE, lineWidth + 1
+                    elif is_lit_by_hovered_wp:
+                        color, width = COLOR_HOVER_ROUTE_FROM_WP, lineWidth + 1
+                    else:
+                        color, width = COLOR_REVERSE, lineWidth
+                    dc.SetPen(wx.Pen(color, width))
                 else:
                     # Regular unidirectional connection
-                    dc.SetPen(wx.Pen(COLOR_REGULAR, lineWidth))
+                    if is_hovered_route:
+                        color, width = COLOR_HOVER_REGULAR, lineWidth + 1
+                    elif is_lit_by_hovered_wp:
+                        color, width = COLOR_HOVER_ROUTE_FROM_WP, lineWidth + 1
+                    else:
+                        color, width = COLOR_REGULAR, lineWidth
+                    dc.SetPen(wx.Pen(color, width))
                 
                 dc.DrawLine(sx1, sy1, sx2, sy2)
                 
@@ -819,9 +869,14 @@ class MapCanvas(wx.Panel):
             if sy < -node_radius or sy > canvasH + node_radius:
                 continue
             
-            # Highlight selected
+            # Priority: selected > direct hover > lit by hovered route > normal
             if wp.id in self._selected_waypoints:
                 dc.SetBrush(wx.Brush(COLOR_SELECTED))
+            elif wp.id == self._hovered_waypoint:
+                dc.SetBrush(wx.Brush(COLOR_HOVER_WAYPOINT))
+            elif (self._hovered_route is not None and
+                  wp.id in (self._hovered_route[0], self._hovered_route[1])):
+                dc.SetBrush(wx.Brush(COLOR_HOVER_WP_FROM_ROUTE))
             else:
                 dc.SetBrush(wx.Brush(COLOR_WAYPOINT))
             
@@ -847,12 +902,18 @@ class MapCanvas(wx.Panel):
                     tx = sx + 8
                     ty = sy - 8
                     
-                    # Use red text for selected markers, white for normal
+                    # Use red for selected, orange for hovered, white for normal
                     if marker.waypoint_id in self._selected_waypoints:
                         # Selected: dark red shadow + red text
                         dc.SetTextForeground(wx.Colour(139, 0, 0))
                         dc.DrawText(label, tx+1, ty+1)
                         dc.SetTextForeground(wx.Colour(255, 0, 0))
+                        dc.DrawText(label, tx, ty)
+                    elif marker.waypoint_id == self._hovered_waypoint:
+                        # Hovered: dark brown shadow + vivid orange text
+                        dc.SetTextForeground(wx.Colour(100, 60, 0))
+                        dc.DrawText(label, tx+1, ty+1)
+                        dc.SetTextForeground(wx.Colour(255, 140, 0))
                         dc.DrawText(label, tx, ty)
                     else:
                         # Normal: black shadow + white text
