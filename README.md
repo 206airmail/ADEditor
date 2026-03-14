@@ -40,7 +40,8 @@ Like the original Java version, this application does not have yet any license a
 
 ### Planned Features
 
-- **Waypoints alignment**
+- **Waypoints alignment**: Align multiple waypoints horizontally, vertically, or along a segment passing to both ends
+- **New from scratch**: Creating a new project file by just opening a map file, not from a savegame folder and initial AutoDrive datas file
 - **Traffic Data Integration**: Import existing road network from map to create routes quickly
 - **Magnifying glass system**: Facilitating selection when several items are located close to others
 - **Advanced Route Tools**:

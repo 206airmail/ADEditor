@@ -36,19 +36,23 @@ class NewProjectDialog(wx.Dialog):
         label = wx.StaticText(self, label=_("Reference FS25 Savegame:"))
         colszr.Add(label, 0, wx.BOTTOM, 1)
         lnszr = wx.BoxSizer(wx.HORIZONTAL)
-        self.txtSavegame = wx.TextCtrl(self, size=(300, -1), style=wx.TE_READONLY)
+        self.txtSavegame = wx.TextCtrl(self, size=(350, -1), style=wx.TE_READONLY)
+        self.txtSavegame.SetHint(_("Select a valid FS25 Savegame folder"))
         lnszr.Add(self.txtSavegame, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 0)
         self.btnBrwseSvGm = wx.Button(self, label=_("..."), style=wx.BU_EXACTFIT)
         lnszr.Add(self.btnBrwseSvGm, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 5)
         colszr.Add(lnszr, 0, wx.BOTTOM|wx.EXPAND, 5)
 
+        lnszr = wx.BoxSizer(wx.HORIZONTAL)
         label = wx.StaticText(self, label=_("Related FS25 map file:"))
-        colszr.Add(label, 0, wx.BOTTOM, 1)
+        lnszr.Add(label, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 0)
+        self.lblMapName = wx.StaticText(self, label=wx.EmptyString)
+        lnszr.Add(self.lblMapName, 1, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 5)
+        self.lblMapName.SetFont(label.GetFont().MakeBold())
+        colszr.Add(lnszr, 0, wx.BOTTOM, 1)
         lnszr = wx.BoxSizer(wx.HORIZONTAL)
         self.txtMapFile = wx.TextCtrl(self, style=wx.TE_READONLY)
         lnszr.Add(self.txtMapFile, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 0)
-        self.btnBrwseMap = wx.Button(self, label=_("..."), style=wx.BU_EXACTFIT)
-        lnszr.Add(self.btnBrwseMap, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 5)
         colszr.Add(lnszr, 0, wx.BOTTOM|wx.EXPAND, 5)
 
         label = wx.StaticText(self, label=_("AutoDrive datas file:"))
@@ -56,8 +60,6 @@ class NewProjectDialog(wx.Dialog):
         lnszr = wx.BoxSizer(wx.HORIZONTAL)
         self.txtADDatas = wx.TextCtrl(self, style=wx.TE_READONLY)
         lnszr.Add(self.txtADDatas, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 0)
-        self.btnBrwseADDatas = wx.Button(self, label=_("..."), style=wx.BU_EXACTFIT)
-        lnszr.Add(self.btnBrwseADDatas, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 5)
         colszr.Add(lnszr, 0, wx.BOTTOM|wx.EXPAND, 5)
 
         hszr.Add(colszr, 1, wx.ALL, 5)
@@ -69,9 +71,6 @@ class NewProjectDialog(wx.Dialog):
         szrMain.AddSpacer(1)
         self.txtResults = wx.TextCtrl(self, size=(-1, 100), style=wx.TE_MULTILINE|wx.TE_READONLY)
         szrMain.Add(self.txtResults, 1, wx.LEFT|wx.RIGHT|wx.EXPAND, 10)
-        #fnt = self.txtResults.GetFont()
-        #fnt.SetFamily(wx.FONTFAMILY_TELETYPE)
-        #self.txtResults.SetFont(fnt)
 
         btnSzr = self.CreateSeparatedButtonSizer(wx.OK|wx.CANCEL)
         szrMain.Add(btnSzr, 0, wx.ALL|wx.EXPAND, 5)
@@ -82,9 +81,8 @@ class NewProjectDialog(wx.Dialog):
 
     def _bindEvents(self):
         self.btnBrwseSvGm.Bind(wx.EVT_BUTTON, self.OnBrowseSavegame)
-        
-        # Bind OK button (ID_OK is standard for Affirmative button in CreateSeparatedButtonSizer)
         self.Bind(wx.EVT_BUTTON, self.OnOK, id=wx.ID_OK)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI_BtnOk, id=wx.ID_OK)
         
     def OnBrowseSavegame(self, event):
         bIsSavegame = False
@@ -124,6 +122,8 @@ class NewProjectDialog(wx.Dialog):
                 if self.map_info:
                     self.txtResults.AppendText(_("Map analysis completed successfully!\n"))
                     self.txtMapFile.SetValue(self.map_info['path'])
+                    self.lblMapName.SetLabel(self.map_info['mapTitle'])
+                    self.GetSizer().Layout()
                     
                     if self.map_info['images']['overview']:
                         img = self.map_info['images']['overview']
@@ -162,6 +162,9 @@ class NewProjectDialog(wx.Dialog):
                 wx.MessageBox(_("The selected folder is not a valid FS25 savegame folder.\nMissing 'careerSavegame.xml'."), 
                              _("Invalid Savegame Folder"), wx.OK | wx.ICON_ERROR)
 
+    def OnUpdateUI_BtnOk(self, event):
+        event.Enable(False if not self.txtSavegame.GetValue() or not self.txtMapFile.GetValue() else True)
+    
     def OnOK(self, event):
         # Validate data
         if not self.txtSavegame.GetValue() or not self.txtMapFile.GetValue():
