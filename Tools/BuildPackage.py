@@ -40,7 +40,7 @@ def BuildPackage():
             myIncludes.append((rel_path, rel_path))
 
     build_exe_options = {
-        "build_exe": "build/ADEditor",
+        "build_exe": f"build/{appVers.getAppName(True)}{archi}",
         'excludes': myExcludes,
         'include_files': myIncludes,
         "optimize": 2
@@ -77,14 +77,16 @@ def BuildPackage():
     # First, search thru the PATH
     sevenZip = shutil.which('7z.exe')
     if sevenZip is None:
-        # Try the standard installation folder
+        # Try the standards installation folder
         sevenZip = Path(os.environ.get("ProgramFiles")) / '7-Zip' / '7z.exe'
         if not sevenZip.exists():
-            sevenZip = None
+            sevenZip = Path(os.environ.get("ProgramW6432")) / '7-Zip' / '7z.exe'
+            if not sevenZip.exists():
+                sevenZip = None
     
     archName = sName +"_Python-" + pyVersion + '_Win' + archi + ('.7z' if sevenZip is not None else '.zip')
 
-    source_dir = Path(__file__).parent.parent / 'build' / 'ADEditor'
+    source_dir = Path(__file__).parent.parent / build_exe_options['build_exe']
 
     print(f"Creating archive {archName} from {source_dir}")
     if sevenZip:
