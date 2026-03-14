@@ -39,6 +39,21 @@
         <li><b>Manage</b>: You can edit or delete markers via the toolbar or the context menu.</li>
     </ul>
 
+
+    <h2>Visual Feedback (Hover)</h2>
+    <p>Moving the mouse over an element highlights it and its connected neighbours, making the network easier to
+        read at a glance.</p>
+    <ul>
+        <li><b>Hovered waypoint</b>: the waypoint turns <b style="color:#FF8C00">orange</b>. All route segments
+            connected to it are highlighted in <b style="color:#FF50DC">magenta</b>.
+            If the waypoint carries a marker, the marker label also turns orange.</li>
+        <li><b>Hovered segment</b>: the segment is drawn brighter/lighter (green, blue or sky-blue according to its
+            type). Its two endpoint waypoints turn <b style="color:#00DCDC">cyan</b>.</li>
+    </ul>
+    <p>The colour priority is: <span style="color:red">selected (red)</span> &gt;
+        <span style="color:#FF8C00">direct hover (orange / bright)</span> &gt;
+        <span style="color:#00DCDC">cross-hover (cyan / magenta)</span> &gt; normal.</p>
+
     <p class="back-link"><a href="index.html">Back to Home</a></p>
 </body>
 

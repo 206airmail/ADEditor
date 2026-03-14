@@ -42,6 +42,21 @@
         </li>
     </ul>
 
+
+    <h2>Retour visuel (Survol)</h2>
+    <p>Déplacer la souris sur un élément le met en évidence ainsi que ses voisins connectés, facilitant la lecture
+        du réseau d'un coup d'œil.</p>
+    <ul>
+        <li><b>Waypoint survolé</b> : le waypoint devient <b style="color:#FF8C00">orange</b>. Tous les segments de
+            route qui y sont connectés sont mis en évidence en <b style="color:#FF50DC">magenta</b>.
+            Si le waypoint possède un marqueur, le libellé du marqueur devient également orange.</li>
+        <li><b>Segment survolé</b> : le segment est dessiné plus clair/lumineux (vert, bleu ou bleu ciel selon son
+            type). Ses deux waypoints extrémités deviennent <b style="color:#00DCDC">cyan</b>.</li>
+    </ul>
+    <p>La priorité des couleurs est : <span style="color:red">sélectionné (rouge)</span> &gt;
+        <span style="color:#FF8C00">survol direct (orange / lumineux)</span> &gt;
+        <span style="color:#00DCDC">survol croisé (cyan / magenta)</span> &gt; normal.</p>
+
     <p class="back-link"><a href="index.html">Retour à l'accueil</a></p>
 </body>
 

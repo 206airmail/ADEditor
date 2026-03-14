@@ -59,6 +59,10 @@ Like the original Java version, this application does not have yet any license a
 
 ### Version 1.1.0
 
+- **Hovered items highlighting**:
+  - Hovering a waypoint highlights the waypoint and all segments connected to it
+  - Hovering a segment highlights the segment and its two endpoint waypoints
+  - Hovered items use distinct colors (orange for waypoints, magenta for segments) to stand out from selected items (red)
 - **Curve Creation Tool**: New utility for creating smooth Bezier curves with adjustable tangency
 - **Enhanced Validation**: Added interactive "Check Data" dialog with "Jump to Error" functionality
 - **FS25 Reverse Mode Support**: Full implementation of reverse-driving segments (marche arrière) aligned with game data conventions
