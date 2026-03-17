@@ -440,24 +440,36 @@ class FarmSimHelper(object):
 
         return None, None
 
-    def _choose_target_size(self, overview_size, dem_size, grass_size):
-        """
-        Use the size shared by any two of the three images.
-        Fallback to DEM size if no pair matches.
-        """
-        sizes = [overview_size, dem_size, grass_size]
-        valid_sizes = [s for s in sizes if s and s != (None, None)]
+      def _choose_target_size(self, overview_size, dem_size, grass_size):
+          """
+          Use the size shared by any two of:
+          - overview size
+          - grass size
+          - DEM size adjusted by -1 px in each dimension
 
-        if len(valid_sizes) >= 2:
-            counts = {}
-            for s in valid_sizes:
-                counts[s] = counts.get(s, 0) + 1
+          Fallback to adjusted DEM size if no pair matches.
+          """
+          adjusted_dem_size = None
+          if dem_size and dem_size != (None, None):
+              dem_w, dem_h = dem_size
+              if dem_w and dem_h and dem_w > 1 and dem_h > 1:
+                  adjusted_dem_size = (dem_w - 1, dem_h - 1)
+              else:
+                  adjusted_dem_size = dem_size
 
-            for size, count in counts.items():
-                if count >= 2:
-                    return size
+          sizes = [overview_size, adjusted_dem_size, grass_size]
+          valid_sizes = [s for s in sizes if s and s != (None, None)]
 
-        return dem_size if dem_size and dem_size != (None, None) else overview_size
+          if len(valid_sizes) >= 2:
+              counts = {}
+              for s in valid_sizes:
+                  counts[s] = counts.get(s, 0) + 1
+
+              for size, count in counts.items():
+                  if count >= 2:
+                      return size
+
+    return adjusted_dem_size if adjusted_dem_size and adjusted_dem_size != (None, None) else overview_size
 
     def _get_reference_image_size(self, is_zip, map_path, resolved_overview_path, overview_data, resolved_dem_path, dem_data):
         """
