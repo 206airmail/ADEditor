@@ -411,6 +411,97 @@ class FarmSimHelper(object):
 
         return None
 
+    def _load_image_size_from_bytes(self, file_path, file_data):
+        """
+        Return (width, height) for image bytes, or (None, None) on failure.
+        Supports DDS and regular images.
+        """
+        try:
+            if not file_path or not file_data:
+                return None, None
+
+            if file_path.lower().endswith(".dds"):
+                with tempfile.NamedTemporaryFile(suffix=".dds", delete=False) as tmp:
+                    tmp.write(file_data)
+                    tmp_path = tmp.name
+                try:
+                    wx_img = DDSReader.read_dds(tmp_path)
+                finally:
+                    if os.path.exists(tmp_path):
+                        os.unlink(tmp_path)
+            else:
+                stream = io.BytesIO(file_data)
+                wx_img = wx.Image(stream)
+
+            if wx_img and wx_img.IsOk():
+                return wx_img.GetWidth(), wx_img.GetHeight()
+        except Exception:
+            pass
+
+        return None, None
+
+    def _choose_target_size(self, overview_size, dem_size, grass_size):
+        """
+        Use the size shared by any two of the three images.
+        Fallback to DEM size if no pair matches.
+        """
+        sizes = [overview_size, dem_size, grass_size]
+        valid_sizes = [s for s in sizes if s and s != (None, None)]
+
+        if len(valid_sizes) >= 2:
+            counts = {}
+            for s in valid_sizes:
+                counts[s] = counts.get(s, 0) + 1
+
+            for size, count in counts.items():
+                if count >= 2:
+                    return size
+
+        return dem_size if dem_size and dem_size != (None, None) else overview_size
+
+    def _get_reference_image_size(self, is_zip, map_path, resolved_overview_path, overview_data, resolved_dem_path, dem_data):
+        """
+        Determine final target size by comparing overview, DEM, and grass01_weight.png.
+
+        Rules:
+        - if any 2 match, use that size
+        - otherwise fallback to DEM size
+        """
+        overview_size = self._load_image_size_from_bytes(resolved_overview_path, overview_data)
+        dem_size = self._load_image_size_from_bytes(resolved_dem_path, dem_data)
+        grass_size = (None, None)
+
+        try:
+            if is_zip:
+                with zipfile.ZipFile(map_path, "r") as zf:
+                    dem_zip_path = resolved_dem_path.replace("\\", "/")
+                    dem_dir = posixpath.dirname(dem_zip_path)
+                    grass_path = posixpath.normpath(posixpath.join(dem_dir, "grass01_weight.png"))
+
+                    grass_match = self.resolve_zip_member_path(
+                        zf,
+                        grass_path,
+                        fallback_exts=(".png",)
+                    )
+
+                    if grass_match:
+                        grass_data = zf.read(grass_match)
+                        grass_size = self._load_image_size_from_bytes(grass_match, grass_data)
+
+            else:
+                dem_dir = os.path.dirname(resolved_dem_path)
+                grass_path = os.path.join(dem_dir, "grass01_weight.png")
+
+                if os.path.exists(grass_path):
+                    with open(grass_path, "rb") as f:
+                        grass_data = f.read()
+                    grass_size = self._load_image_size_from_bytes(grass_path, grass_data)
+
+        except Exception:
+            pass
+
+        return self._choose_target_size(overview_size, dem_size, grass_size)
+
     def _extractMapImages(self, map_path, is_zip, log_func=None):
         """
         Extract overview and heightmap images from map.
@@ -424,6 +515,10 @@ class FarmSimHelper(object):
 
         overview_data = None
         heightmap_data = None
+        resolved_overview_path = None
+        resolved_dem_path = None
+        target_w = None
+        target_h = None
 
         locations_ok = self.extractMapImagesLocations(map_path, is_zip, log_func)
         if locations_ok is None:
@@ -497,6 +592,15 @@ class FarmSimHelper(object):
                     with open(resolved_dem_path, "rb") as f:
                         heightmap_data = f.read()
 
+            target_w, target_h = self._get_reference_image_size(
+                is_zip,
+                map_path,
+                resolved_overview_path,
+                overview_data,
+                resolved_dem_path,
+                heightmap_data
+            )
+
             # Convert overview image
             if overview_data:
                 is_dds = False
@@ -521,9 +625,10 @@ class FarmSimHelper(object):
 
                 if wx_img and wx_img.IsOk():
                     w = wx_img.GetWidth()
-                    self.overview_img_w = w
                     h = wx_img.GetHeight()
-                    self.overview_img_h = h
+
+                    self.overview_img_w = target_w if target_w else w
+                    self.overview_img_h = target_h if target_h else h
 
                     crop_x = w // 4
                     crop_y = h // 4
@@ -532,7 +637,9 @@ class FarmSimHelper(object):
 
                     cropped = wx_img.GetSubImage(wx.Rect(crop_x, crop_y, crop_w, crop_h))
                     if cropped.IsOk():
-                        resized = cropped.Scale(w, h, wx.IMAGE_QUALITY_HIGH)
+                        final_w = self.overview_img_w
+                        final_h = self.overview_img_h
+                        resized = cropped.Scale(final_w, final_h, wx.IMAGE_QUALITY_HIGH)
                         images["overview"] = resized
                         if log_func:
                             log_func(_("Overview cropped and resized"))
@@ -572,9 +679,9 @@ class FarmSimHelper(object):
 
                     cropped = wx_img.GetSubImage(wx.Rect(crop_x, crop_y, crop_w, crop_h))
                     if cropped.IsOk():
-                        target_w = getattr(self, "overview_img_w", w)
-                        target_h = getattr(self, "overview_img_h", h)
-                        resized = cropped.Scale(target_w, target_h, wx.IMAGE_QUALITY_HIGH)
+                        final_w = getattr(self, "overview_img_w", target_w if target_w else w)
+                        final_h = getattr(self, "overview_img_h", target_h if target_h else h)
+                        resized = cropped.Scale(final_w, final_h, wx.IMAGE_QUALITY_HIGH)
                         images["heightmap"] = resized
                         if log_func:
                             log_func(_("Heightmap was cropped and resized"))
